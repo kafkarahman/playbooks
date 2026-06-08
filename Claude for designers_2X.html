@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Claude for Designers - 2X Preliminary Guide v1</title>
+<style>
+
+:root {
+  --red: #FF0F0F;
+  --dark: #151515;
+  --dark-2: #0F0F10;
+  --dark-3: #1E1E20;
+  --white: #FFFFFF;
+  --muted: #A7A7AD;
+  --soft: rgba(255,255,255,0.72);
+  --line: rgba(255,255,255,0.12);
+  --blue: #007FFF;
+  --teal: #00A884;
+  --purple: #9966FF;
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --shadow: 0 24px 80px rgba(0,0,0,0.38);
+  --max: 1180px;
+  --sidebar: 306px;
+  --topbar: 78px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--dark);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(0, 127, 255, 0.12), transparent 34%),
+    radial-gradient(circle at 92% 18%, rgba(153, 102, 255, 0.10), transparent 30%),
+    radial-gradient(circle at 72% 86%, rgba(0, 168, 132, 0.09), transparent 28%);
+  opacity: 0.9;
+  z-index: -2;
+}
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent 82%);
+  z-index: -1;
+}
+a { color: var(--white); text-decoration-color: rgba(255,15,15,0.7); text-underline-offset: 3px; }
+strong { color: var(--white); font-weight: 750; }
+em { color: rgba(255,255,255,0.86); }
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar) 1fr;
+  min-height: 100vh;
+}
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar);
+  padding: 22px;
+  border-right: 1px solid var(--line);
+  background: rgba(15, 15, 16, 0.84);
+  backdrop-filter: blur(22px);
+  z-index: 20;
+  overflow-y: auto;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.brand-logo-box {
+  width: 54px;
+  height: 42px;
+  border-radius: 13px;
+  border: 1px solid rgba(255,255,255,0.18);
+  display: grid;
+  place-items: center;
+  background: #101010;
+  overflow: hidden;
+  padding: 8px;
+  flex: 0 0 auto;
+}
+.brand-logo-box img { width: 100%; height: auto; display: block; }
+.brand h1 {
+  font-size: 14px;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.brand p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.search-wrap { position: relative; margin: 20px 0 18px; }
+.search-wrap label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+#search-input {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.055);
+  color: var(--white);
+  border-radius: 14px;
+  padding: 13px 14px 13px 40px;
+  outline: none;
+  font-size: 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' fill='none' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8' stroke='%23A7A7AD' stroke-width='2'/%3E%3Cpath d='M21 21l-4.35-4.35' stroke='%23A7A7AD' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 14px center;
+}
+#search-input:focus {
+  border-color: rgba(255,15,15,0.72);
+  box-shadow: 0 0 0 4px rgba(255,15,15,0.13);
+}
+#search-results {
+  display: none;
+  margin-top: 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.54);
+  max-height: 360px;
+  overflow-y: auto;
+}
+.search-result-item {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  color: var(--white);
+  background: transparent;
+  border-bottom: 1px solid var(--line);
+  padding: 12px;
+  cursor: pointer;
+}
+.search-result-item:last-child { border-bottom: 0; }
+.search-result-item:hover { background: rgba(255,255,255,0.065); }
+.search-result-item .result-section {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.nav-title {
+  margin: 24px 0 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+.nav-list {
+  display: grid;
+  gap: 7px;
+}
+.nav-item {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255,255,255,0.74);
+  border-radius: 13px;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: 180ms ease;
+  font-size: 13px;
+  font-family: inherit;
+}
+.nav-item:hover { background: rgba(255,255,255,0.055); color: var(--white); }
+.nav-item .num {
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(255,255,255,0.07);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+.nav-item.active {
+  color: var(--white);
+  background: rgba(255,255,255,0.075);
+  border-color: rgba(255,255,255,0.13);
+}
+.nav-item.active .num {
+  background: transparent;
+  border: 1px solid var(--red);
+  color: var(--white);
+}
+.nav-item.pillar-creative.active .num { border-color: var(--purple); }
+.nav-item.pillar-uiux.active .num { border-color: var(--blue); }
+.nav-item.pillar-video.active .num { border-color: var(--teal); }
+.status-card {
+  margin-top: 24px;
+  padding: 15px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.13);
+  background: rgba(255,255,255,0.045);
+}
+.status-card strong { font-size: 13px; }
+.status-card p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.mobile-top {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: var(--topbar);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(15,15,16,0.88);
+  backdrop-filter: blur(18px);
+  align-items: center;
+  justify-content: space-between;
+}
+.mobile-top button,
+.ghost-btn,
+.primary-btn,
+.copy-btn {
+  border: 1px solid rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
+  color: var(--white);
+  padding: 11px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 750;
+  transition: 180ms ease;
+  font-family: inherit;
+}
+.mobile-top button:hover,
+.ghost-btn:hover,
+.copy-btn:hover { background: rgba(255,255,255,0.10); }
+.primary-btn { background: transparent; border-color: var(--red); }
+.primary-btn:hover { box-shadow: 0 0 0 4px rgba(255,15,15,0.12); }
+
+main {
+  grid-column: 2;
+  padding: 32px 42px 120px;
+  min-width: 0;
+}
+.page {
+  display: none;
+  max-width: var(--max);
+  min-height: calc(100vh - 64px);
+  margin: 0 auto;
+  animation: fadeUp 260ms ease both;
+}
+.page.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-eyebrow, .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 18px;
+  font-weight: 850;
+}
+.page-eyebrow::before, .eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--red);
+  border-radius: 99px;
+}
+.page-eyebrow.creative::before { background: var(--purple); }
+.page-eyebrow.uiux::before { background: var(--blue); }
+.page-eyebrow.video::before { background: var(--teal); }
+.page-title, .cover-title {
+  font-size: clamp(44px, 6.4vw, 84px);
+  line-height: 0.92;
+  letter-spacing: -0.065em;
+  margin: 0 0 22px;
+  max-width: 980px;
+  font-weight: 850;
+}
+.page-intro, .lead {
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.45;
+  color: rgba(255,255,255,0.78);
+  max-width: 940px;
+  margin: 0 0 30px;
+}
+h2 {
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  margin: 52px 0 14px;
+}
+h3 {
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  margin: 32px 0 12px;
+}
+h4 {
+  font-size: 18px;
+  margin: 0 0 10px;
+  letter-spacing: -0.015em;
+}
+p, li, td {
+  color: rgba(255,255,255,0.72);
+  line-height: 1.7;
+  font-size: 15.5px;
+}
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 7px; }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 7px;
+  padding: 2px 6px;
+  color: rgba(255,255,255,0.86);
+}
+
+.cover {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 32px;
+  align-items: center;
+  padding-top: 34px;
+}
+.cover-logo-wrap {
+  width: 116px;
+  margin-bottom: 28px;
+}
+.cover-logo { width: 100%; height: auto; display: block; }
+.cover-card {
+  position: relative;
+  min-height: 460px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: rgba(255,255,255,0.04);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  padding: 30px;
+}
+.cover-card::before {
+  content: "";
+  position: absolute;
+  inset: 24px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.13);
+}
+.orbital {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50%;
+  right: -70px;
+  top: 36px;
+}
+.orbital::before, .orbital::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.12);
+  inset: 54px;
+}
+.orbital::after { inset: 116px; border-color: rgba(255,15,15,0.62); }
+.floating-chip {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(15,15,16,0.78);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+}
+.chip-a { left: 34px; top: 46px; }
+.chip-b { right: 38px; bottom: 86px; }
+.chip-c { left: 54px; bottom: 44px; }
+.floating-chip b { display: block; font-size: 13px; margin-bottom: 4px; }
+.floating-chip span { color: var(--muted); font-size: 12px; }
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: rgba(255,255,255,0.72);
+  font-size: 12px;
+  background: rgba(255,255,255,0.035);
+}
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 28px;
+}
+.metric,
+.metric-box,
+.tool-card,
+.case-study,
+.card,
+.prompt-card {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.045);
+  border-radius: var(--radius-lg);
+}
+.metric { padding: 18px; }
+.metric b { display: block; font-size: 24px; margin-bottom: 4px; }
+.metric span { color: var(--muted); font-size: 12px; }
+
+.tool-grid,
+.case-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.tool-card,
+.metric-box { padding: 18px; min-height: 118px; }
+.tool-name { font-weight: 800; margin-bottom: 8px; }
+.tool-desc,
+.metric-label { color: var(--muted); font-size: 13px; line-height: 1.55; }
+.metric-value { font-size: 28px; font-weight: 900; color: var(--red); letter-spacing: -0.04em; }
+.callout,
+.hitl-box {
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.055);
+  padding: 20px;
+  margin: 24px 0;
+}
+.callout { border-left: 4px solid var(--red); }
+.callout.blue { border-left-color: var(--blue); }
+.callout.teal { border-left-color: var(--teal); }
+.callout.purple { border-left-color: var(--purple); }
+.callout-label,
+.hitl-label {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 8px;
+}
+.callout.blue .callout-label { color: var(--blue); }
+.callout.teal .callout-label { color: var(--teal); }
+.callout.purple .callout-label { color: var(--purple); }
+.callout p:last-child,
+.hitl-box p:last-child { margin-bottom: 0; }
+.hitl-box {
+  border-color: rgba(255,15,15,0.35);
+  background: rgba(255,15,15,0.045);
+}
+.case-study { overflow: hidden; margin: 28px 0; }
+.case-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,0.04);
+}
+.case-title { font-weight: 800; flex: 1; }
+.case-body { padding: 20px; }
+.case-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.badge-creative { color: var(--purple); background: rgba(153,102,255,0.12); }
+.badge-uiux { color: var(--blue); background: rgba(0,127,255,0.12); }
+.badge-video { color: var(--teal); background: rgba(0,168,132,0.12); }
+.badge-verified { color: #5ed69a; background: rgba(94,214,154,0.12); }
+.badge-partial { color: #e6a818; background: rgba(230,168,24,0.12); }
+.prompt-block,
+pre {
+  position: relative;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 18px 0;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  padding: 20px;
+  background: #0B0B0C;
+  color: rgba(255,255,255,0.82);
+  font-size: 13px;
+  line-height: 1.65;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+.prompt-block::before {
+  content: 'Prompt';
+  position: absolute;
+  top: -11px;
+  left: 18px;
+  background: #0B0B0C;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 900;
+}
+.prompt-block .copy-btn {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  padding: 7px 11px;
+  font-size: 12px;
+}
+.image-placeholder,
+.placeholder {
+  border: 1px dashed rgba(255,255,255,0.34);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.035);
+  min-height: 210px;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: rgba(255,255,255,0.64);
+  margin: 24px 0;
+}
+.image-placeholder .icon { font-size: 30px; margin-bottom: 10px; }
+.img-label { color: var(--white); font-weight: 800; margin-bottom: 6px; }
+.img-desc { color: var(--muted); max-width: 540px; }
+.table-wrap { overflow-x: auto; }
+.comparison-table, table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+  margin: 24px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.comparison-table th,
+th {
+  color: var(--white);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.04);
+}
+.comparison-table th,
+.comparison-table td,
+th, td {
+  text-align: left;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+.comparison-table tr:last-child td,
+tr:last-child td { border-bottom: 0; }
+.check { color: #5ed69a; font-weight: 900; }
+.cross { color: #ff6b6b; font-weight: 900; }
+.step-list {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  margin: 24px 0;
+  padding: 0;
+  counter-reset: step;
+}
+.step-list li {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  align-items: start;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  background: rgba(255,255,255,0.035);
+  margin: 0;
+}
+.step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,15,15,0.85);
+  color: var(--white);
+  font-weight: 900;
+  font-size: 13px;
+  background: transparent !important;
+}
+.step-num.blue { border-color: var(--blue); }
+.step-num.teal { border-color: var(--teal); }
+.step-num.purple { border-color: var(--purple); }
+.footer-controls {
+  position: fixed;
+  left: calc(var(--sidebar) + 42px);
+  right: 42px;
+  bottom: 24px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: var(--max);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 10px;
+  background: rgba(15,15,16,0.76);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 14px 50px rgba(0,0,0,0.32);
+}
+.progress-text { color: var(--muted); font-size: 13px; padding-left: 12px; }
+.control-buttons { display: flex; gap: 10px; }
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.62);
+  z-index: 15;
+}
+.highlight { background: rgba(255,15,15,0.14); border-radius: 3px; padding: 1px 3px; }
+
+@media (max-width: 980px) {
+  .app { display: block; }
+  .mobile-top { display: flex; }
+  .sidebar {
+    transform: translateX(-105%);
+    transition: transform 220ms ease;
+    box-shadow: var(--shadow);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.visible { display: block; }
+  main { grid-column: auto; padding: 26px 18px 124px; }
+  .cover { grid-template-columns: 1fr; }
+  .metric-row { grid-template-columns: 1fr; }
+  .footer-controls { left: 18px; right: 18px; bottom: 18px; }
+}
+@media (max-width: 620px) {
+  .page-title, .cover-title { font-size: 46px; letter-spacing: -0.055em; }
+  .page { min-height: auto; }
+  .cover-card { min-height: 320px; }
+  .footer-controls { border-radius: 24px; align-items: stretch; flex-direction: column; }
+  .control-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .control-buttons button { width: 100%; }
+  .comparison-table, table { min-width: 640px; }
+}
+@media print {
+  .sidebar, .mobile-top, .footer-controls, .sidebar-overlay { display: none !important; }
+  body { background: #151515; }
+  main { padding: 0; }
+  .app { display: block; }
+  .page { display: block !important; min-height: auto; page-break-after: always; }
+  .case-study, .callout, .hitl-box, .image-placeholder, .comparison-table, table, pre, .prompt-block { break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<div class="sidebar-overlay" id="overlay"></div>
+<div class="mobile-top">
+  <div class="brand" style="margin:0">
+    <div class="brand-logo-box"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjc2IDY3NCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4wIEJ1aWxkIDE0MikgIC0tPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3QwIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuc3QxIHsKICAgICAgICBmaWxsOiAjZmYwZjBmOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNNTU3LjkyODUwMiw3OS4wNTc2MzZjLTEyLjY4MzU3Ny0yNC44MDE2NzYtNDAuMzA1NTIxLTQyLjAxNjctNzIuMTI0ODEyLTQyLjAxNjdsLTI0MS45OTMzMDguMDQwMTczaC01LjQ3NTc3NHYuMDM2NjE0Yy0xMDguMzgxNDczLDEuNjE1NTc3LTIwMC4xOTM3NDcsNjQuMjYwNTA2LTIwMC4xOTM3NDcsMTc3LjAzODY2OGwtLjE0MDg2MSwzLjI4NzZ2LjM1MDg4MWMwLDEwLjU1MDgzMiw4LjM1MDk2MiwxOS4xNjk3ODYsMTguNzU4MzkxLDE5Ljc2OTg0M2wxMTAuMzc0Mzc1LS4xMzkzMzVjOS4zMDY5ODUtMS4xOTE5NzgsMTYuNTkzNjA5LTguODE0NzM1LDE3LjI1MTEyOS0xOC4yNzIyNDMuMDIxODY2LS4wMTI3MTMuMDM5MTU2LS4wMzAwMDMuMDYxMDIzLS4wNDI3MTYsNC4wMDkxOTQtMzcuNDY3NDU1LDMzLjM4MzUwOC00Ny4zODU2ODQsNTguMTgxMTE1LTQ3LjM4NTY4NCwzNy4zNDA4MzIsMCw1Ni44OTk2MzgsMjIuMDM3MzQ2LDU2Ljg5OTYzOCw1My44NjkzNSwwLDI0LjQ4NTg4My04Ljg5MTAxMywzOS4xNzc2MTctMzIuMDA2NDI4LDYyLjAzMTE0Mkw2My40NDAzODEsNDkxLjQxNDc0MWMtMTUuNTAzODQ0LDE1LjQxNzkwNC0yNS4xMDkzMzIsMzYuNzYxMTE2LTI1LjEwOTMzMiw2MC4zNTQwMzRsLjAxNjI3Myw2NS4zNjA5NWMtLjAxOTMyNCwyLjUxNDEzNy4yNzcxNDUsNS4wNTIxNzQsMS4yOTc3NSw3LjUxODAwMiwzLjE1OTk2MSw3LjYzMTQwMiwxMC42MDE2ODQsMTIuMjI5NDY2LDE4LjQwNzUxLDEyLjIzODExMWwuMDczMjI3LjA3MzIyN2g0MjguMTk4NjA5YzMxLjgxOTI5MSwwLDU5LjE5MjA1OS0xNy4yMTUwMjQsNzEuODc1NjM2LTQyLjAxNjdoLjI0OTE3Nmw3OS40ODIxMi0xMjQuMDcyNDU0VjIwNC40MTQxMWwtODAuMDAyODQ4LTEyNS4zNTY0NzVaTTQ1OS42MzEwMzYsNDgwLjgxNzYzNGMtMTMuNzUyNDkyLDIwLjcyOTkzNC0zOC41OTg5MTgsMzQuOTg0ODQ2LTY2Ljg4NzAyNywzNS4zNDM4NjNoLTE1MS4xNTk0MzJjLTUuNzUyNDEsMC0xMC40MTQ1NDgtNC42NjMxNTQtMTAuNDE0NTQ4LTEwLjQxNjA3MywwLTMuMDQwNDU4LDEuMjI0NTIzLTUuNzE4MzM5LDMuMzEyMDA5LTcuNTkzNzcybDEzMi42MTMwOTUtMTI4LjkwNjQ3MmM1MC42NzYzMzUtNDguOTcxNzY3LDc4LjIzODI3My04MS42MTk5NSw3OC4yMzgyNzMtMTQyLjgzNDkxMywwLTEzLjQyNDQ5NS0xLjM1MDEyOC0yNi4xNTg5MjQtMy44MzAxOTQtMzguMjMyMjczbC0uMTUyNTU3LTEuNjc4NjM0YzAtMy4yNTI1MTIsMi42MzcxOTktNS44ODkyMDMsNS44OTA3MjktNS44ODkyMDMsMi4xNTgxNzEsMCwzLjk2NDQ0NCwxLjIxODQyMSw0Ljk4OTYyNiwyLjk0OTk0MWwxMDEuNDI5OTY2LDE1My40Mzk2NDktOTQuMDI5OTQyLDE0My44MTc4ODhaIi8+CiAgPGc+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIxNy43OTUzNyw1OTYuOTY3MzAybC0zMTYuNzA1OTkyLS4wMDA1MDljLTEwLjk5NzgyNCwwLTE5Ljk5NjEzNS04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3LDAtMTAuOTk2Mjk4LDguOTk0NzUyLTE5Ljk5MjU3NiwxOS45OTEwNS0xOS45OTU2MjdoMTI2Ljc0OTgyN2MxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNXMtOC45OTgzMTItMTkuOTk2MTM1LTE5Ljk5NjEzNS0xOS45OTYxMzVoLTE0NC43MTU5MzljLTI4LjI4ODEwOS0uMzU5MDE3LTUzLjEzNDUzNS0xNS40MzU3MDItNjYuODg3MDI3LTM2LjE2NTYzNmwtOTQuMDI5OTQyLTE0My44MTc4ODgsNTcuNTA3MzIzLTg2Ljk5NTAzN2M1LjI0OTQ4MS03LjgxNDQ3MSwxNC4xNTc3ODQtMTIuOTYzNzczLDI0LjI3ODkxNS0xMi45NjM3NzNoMTUyLjc1MDA5MmMxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNXMtOC45OTgzMTItMTkuOTk1NjI3LTE5Ljk5NjEzNS0xOS45OTU2MjdsLTEwNC4wNzU4MTEtLjAwMDUwOWMtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LTguOTk3ODAzLTE5Ljk5NjEzNS0xOS45OTU2MjdzOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNS0xOS45OTYxMzVoMzQ1LjUxOTkxNGMxMC45OTc4MjQsMCwxOS45OTU2MjctOC45OTc4MDMsMTkuOTk1NjI3LTE5Ljk5NTYyN3MtOC45OTc4MDMtMTkuOTk2MTM1LTE5Ljk5NTYyNy0xOS45OTYxMzVoLTI5Ni4wNTA4MTJjLTEwLjk5NzgyNCwwLTE5Ljk5NjEzNS04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3czguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzUtMTkuOTk2MTM1aDE0Mi43ODMwNDRjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk4MzEyLDE5Ljk5NjEzNS0xOS45OTYxMzVzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1bC0yNTQuODU1Mzc2LS4wNDAxNzNjLTMxLjgxOTI5MSwwLTU5LjQ0MTIzNSwxNy4yMTUwMjQtNzIuMTI0ODEyLDQyLjAxNjdsLTgwLjAwMjMzOSwxMjUuMzU2NDc1djI2Ni40NTU3OTlsNzkuNDgxNjEyLDEyNC4wNzI0NTRoLjI0OTE3NmMxMi42ODM1NzcsMjQuODAxNjc2LDQwLjA1NjM0NCw0Mi4wMTY3LDcxLjg3NTYzNiw0Mi4wMTY3aDQyOC4yNTc1OTdjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk3ODAzLDE5Ljk5NjEzNS0xOS45OTU2MjdzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1WiIvPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyMTcuNzk1MzcsNTE2Ljk4MzI3aC0xMDkuMDIzMjI5Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNXM4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNWgxMDkuMDIzMjI5YzEwLjk5NzgyNCwwLDE5Ljk5NjEzNS04Ljk5ODMxMiwxOS45OTYxMzUtMTkuOTk2MTM1cy04Ljk5ODMxMi0xOS45OTYxMzUtMTkuOTk2MTM1LTE5Ljk5NjEzNVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMDI3LjQ3MDAxNyw0NzYuOTkxNTA4aDEyMi42MTE5NzdjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk4MzEyLDE5Ljk5NjEzNS0xOS45OTYxMzVzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1aC0xMjIuNjExOTc3Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNXM4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMTExLjExNTkyMywxOTcuMDQ5MTc0Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTc4MDMtMTkuOTk2MTM1LDE5Ljk5NTYyN3M4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNWgxMDYuODg3OTQyYzEwLjk5NzgyNCwwLDE5Ljk5NjEzNS04Ljk5ODMxMiwxOS45OTYxMzUtMTkuOTk2MTM1cy04Ljk5ODMxMi0xOS45OTU2MjctMTkuOTk2MTM1LTE5Ljk5NTYyN2gtMTA2Ljg4Nzk0MloiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik05NDYuMDkzNjUsMzk3LjAwODQ5MmgxMjIuNjExOTc3YzEwLjk5NzgyNCwwLDE5Ljk5NTYyNy04Ljk5NzgwMywxOS45OTU2MjctMTkuOTk1NjI3cy04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3LTE5Ljk5NjEzNWgtMTIyLjYxMTk3N2MtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LDguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzVzOC45OTgzMTIsMTkuOTk1NjI3LDE5Ljk5NjEzNSwxOS45OTU2MjdaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTAwOS40NzM5MDMsMjk3LjAyODgzM2MwLTEwLjk5NzgyNC04Ljk5ODMxMi0xOS45OTYxMzUtMTkuOTk2MTM1LTE5Ljk5NjEzNWgtMTE4LjU1NzAxNmMtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LDguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzVzOC45OTgzMTIsMTkuOTk2MTM1LDE5Ljk5NjEzNSwxOS45OTYxMzVoMTE4LjU1NzAxNmMxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNVoiLz4KICA8L2c+Cjwvc3ZnPg==" alt="2X logo" /></div>
+    <div><h1>Claude for Designers</h1><p>V1, June 2026</p></div>
+  </div>
+  <button id="menuToggle" type="button">Menu</button>
+</div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-logo-box"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjc2IDY3NCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4wIEJ1aWxkIDE0MikgIC0tPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3QwIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuc3QxIHsKICAgICAgICBmaWxsOiAjZmYwZjBmOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNNTU3LjkyODUwMiw3OS4wNTc2MzZjLTEyLjY4MzU3Ny0yNC44MDE2NzYtNDAuMzA1NTIxLTQyLjAxNjctNzIuMTI0ODEyLTQyLjAxNjdsLTI0MS45OTMzMDguMDQwMTczaC01LjQ3NTc3NHYuMDM2NjE0Yy0xMDguMzgxNDczLDEuNjE1NTc3LTIwMC4xOTM3NDcsNjQuMjYwNTA2LTIwMC4xOTM3NDcsMTc3LjAzODY2OGwtLjE0MDg2MSwzLjI4NzZ2LjM1MDg4MWMwLDEwLjU1MDgzMiw4LjM1MDk2MiwxOS4xNjk3ODYsMTguNzU4MzkxLDE5Ljc2OTg0M2wxMTAuMzc0Mzc1LS4xMzkzMzVjOS4zMDY5ODUtMS4xOTE5NzgsMTYuNTkzNjA5LTguODE0NzM1LDE3LjI1MTEyOS0xOC4yNzIyNDMuMDIxODY2LS4wMTI3MTMuMDM5MTU2LS4wMzAwMDMuMDYxMDIzLS4wNDI3MTYsNC4wMDkxOTQtMzcuNDY3NDU1LDMzLjM4MzUwOC00Ny4zODU2ODQsNTguMTgxMTE1LTQ3LjM4NTY4NCwzNy4zNDA4MzIsMCw1Ni44OTk2MzgsMjIuMDM3MzQ2LDU2Ljg5OTYzOCw1My44NjkzNSwwLDI0LjQ4NTg4My04Ljg5MTAxMywzOS4xNzc2MTctMzIuMDA2NDI4LDYyLjAzMTE0Mkw2My40NDAzODEsNDkxLjQxNDc0MWMtMTUuNTAzODQ0LDE1LjQxNzkwNC0yNS4xMDkzMzIsMzYuNzYxMTE2LTI1LjEwOTMzMiw2MC4zNTQwMzRsLjAxNjI3Myw2NS4zNjA5NWMtLjAxOTMyNCwyLjUxNDEzNy4yNzcxNDUsNS4wNTIxNzQsMS4yOTc3NSw3LjUxODAwMiwzLjE1OTk2MSw3LjYzMTQwMiwxMC42MDE2ODQsMTIuMjI5NDY2LDE4LjQwNzUxLDEyLjIzODExMWwuMDczMjI3LjA3MzIyN2g0MjguMTk4NjA5YzMxLjgxOTI5MSwwLDU5LjE5MjA1OS0xNy4yMTUwMjQsNzEuODc1NjM2LTQyLjAxNjdoLjI0OTE3Nmw3OS40ODIxMi0xMjQuMDcyNDU0VjIwNC40MTQxMWwtODAuMDAyODQ4LTEyNS4zNTY0NzVaTTQ1OS42MzEwMzYsNDgwLjgxNzYzNGMtMTMuNzUyNDkyLDIwLjcyOTkzNC0zOC41OTg5MTgsMzQuOTg0ODQ2LTY2Ljg4NzAyNywzNS4zNDM4NjNoLTE1MS4xNTk0MzJjLTUuNzUyNDEsMC0xMC40MTQ1NDgtNC42NjMxNTQtMTAuNDE0NTQ4LTEwLjQxNjA3MywwLTMuMDQwNDU4LDEuMjI0NTIzLTUuNzE4MzM5LDMuMzEyMDA5LTcuNTkzNzcybDEzMi42MTMwOTUtMTI4LjkwNjQ3MmM1MC42NzYzMzUtNDguOTcxNzY3LDc4LjIzODI3My04MS42MTk5NSw3OC4yMzgyNzMtMTQyLjgzNDkxMywwLTEzLjQyNDQ5NS0xLjM1MDEyOC0yNi4xNTg5MjQtMy44MzAxOTQtMzguMjMyMjczbC0uMTUyNTU3LTEuNjc4NjM0YzAtMy4yNTI1MTIsMi42MzcxOTktNS44ODkyMDMsNS44OTA3MjktNS44ODkyMDMsMi4xNTgxNzEsMCwzLjk2NDQ0NCwxLjIxODQyMSw0Ljk4OTYyNiwyLjk0OTk0MWwxMDEuNDI5OTY2LDE1My40Mzk2NDktOTQuMDI5OTQyLDE0My44MTc4ODhaIi8+CiAgPGc+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIxNy43OTUzNyw1OTYuOTY3MzAybC0zMTYuNzA1OTkyLS4wMDA1MDljLTEwLjk5NzgyNCwwLTE5Ljk5NjEzNS04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3LDAtMTAuOTk2Mjk4LDguOTk0NzUyLTE5Ljk5MjU3NiwxOS45OTEwNS0xOS45OTU2MjdoMTI2Ljc0OTgyN2MxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNXMtOC45OTgzMTItMTkuOTk2MTM1LTE5Ljk5NjEzNS0xOS45OTYxMzVoLTE0NC43MTU5MzljLTI4LjI4ODEwOS0uMzU5MDE3LTUzLjEzNDUzNS0xNS40MzU3MDItNjYuODg3MDI3LTM2LjE2NTYzNmwtOTQuMDI5OTQyLTE0My44MTc4ODgsNTcuNTA3MzIzLTg2Ljk5NTAzN2M1LjI0OTQ4MS03LjgxNDQ3MSwxNC4xNTc3ODQtMTIuOTYzNzczLDI0LjI3ODkxNS0xMi45NjM3NzNoMTUyLjc1MDA5MmMxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNXMtOC45OTgzMTItMTkuOTk1NjI3LTE5Ljk5NjEzNS0xOS45OTU2MjdsLTEwNC4wNzU4MTEtLjAwMDUwOWMtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LTguOTk3ODAzLTE5Ljk5NjEzNS0xOS45OTU2MjdzOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNS0xOS45OTYxMzVoMzQ1LjUxOTkxNGMxMC45OTc4MjQsMCwxOS45OTU2MjctOC45OTc4MDMsMTkuOTk1NjI3LTE5Ljk5NTYyN3MtOC45OTc4MDMtMTkuOTk2MTM1LTE5Ljk5NTYyNy0xOS45OTYxMzVoLTI5Ni4wNTA4MTJjLTEwLjk5NzgyNCwwLTE5Ljk5NjEzNS04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3czguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzUtMTkuOTk2MTM1aDE0Mi43ODMwNDRjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk4MzEyLDE5Ljk5NjEzNS0xOS45OTYxMzVzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1bC0yNTQuODU1Mzc2LS4wNDAxNzNjLTMxLjgxOTI5MSwwLTU5LjQ0MTIzNSwxNy4yMTUwMjQtNzIuMTI0ODEyLDQyLjAxNjdsLTgwLjAwMjMzOSwxMjUuMzU2NDc1djI2Ni40NTU3OTlsNzkuNDgxNjEyLDEyNC4wNzI0NTRoLjI0OTE3NmMxMi42ODM1NzcsMjQuODAxNjc2LDQwLjA1NjM0NCw0Mi4wMTY3LDcxLjg3NTYzNiw0Mi4wMTY3aDQyOC4yNTc1OTdjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk3ODAzLDE5Ljk5NjEzNS0xOS45OTU2MjdzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1WiIvPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyMTcuNzk1MzcsNTE2Ljk4MzI3aC0xMDkuMDIzMjI5Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNXM4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNWgxMDkuMDIzMjI5YzEwLjk5NzgyNCwwLDE5Ljk5NjEzNS04Ljk5ODMxMiwxOS45OTYxMzUtMTkuOTk2MTM1cy04Ljk5ODMxMi0xOS45OTYxMzUtMTkuOTk2MTM1LTE5Ljk5NjEzNVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMDI3LjQ3MDAxNyw0NzYuOTkxNTA4aDEyMi42MTE5NzdjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk4MzEyLDE5Ljk5NjEzNS0xOS45OTYxMzVzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1aC0xMjIuNjExOTc3Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNXM4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMTExLjExNTkyMywxOTcuMDQ5MTc0Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTc4MDMtMTkuOTk2MTM1LDE5Ljk5NTYyN3M4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNWgxMDYuODg3OTQyYzEwLjk5NzgyNCwwLDE5Ljk5NjEzNS04Ljk5ODMxMiwxOS45OTYxMzUtMTkuOTk2MTM1cy04Ljk5ODMxMi0xOS45OTU2MjctMTkuOTk2MTM1LTE5Ljk5NTYyN2gtMTA2Ljg4Nzk0MloiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik05NDYuMDkzNjUsMzk3LjAwODQ5MmgxMjIuNjExOTc3YzEwLjk5NzgyNCwwLDE5Ljk5NTYyNy04Ljk5NzgwMywxOS45OTU2MjctMTkuOTk1NjI3cy04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3LTE5Ljk5NjEzNWgtMTIyLjYxMTk3N2MtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LDguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzVzOC45OTgzMTIsMTkuOTk1NjI3LDE5Ljk5NjEzNSwxOS45OTU2MjdaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTAwOS40NzM5MDMsMjk3LjAyODgzM2MwLTEwLjk5NzgyNC04Ljk5ODMxMi0xOS45OTYxMzUtMTkuOTk2MTM1LTE5Ljk5NjEzNWgtMTE4LjU1NzAxNmMtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LDguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzVzOC45OTgzMTIsMTkuOTk2MTM1LDE5Ljk5NjEzNSwxOS45OTYxMzVoMTE4LjU1NzAxNmMxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNVoiLz4KICA8L2c+Cjwvc3ZnPg==" alt="2X logo" /></div>
+      <div>
+        <h1>Claude for Designers</h1>
+        <p>Version 1, June 2026</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <label for="search-input">Search playbook</label>
+      <input type="search" id="search-input" placeholder="Try: prompt, Figma, video, MCP" autocomplete="off" />
+      <div id="search-results"></div>
+    </div>
+    <nav aria-label="Playbook navigation">
+      <div class="nav-title">Start Here</div>
+<div class="nav-list">
+<button class="nav-item" data-target="cover" type="button"><span class="num">01</span><span>Cover</span></button>
+<button class="nav-item" data-target="intro" type="button"><span class="num">02</span><span>What is This Guide?</span></button>
+<button class="nav-item" data-target="setup" type="button"><span class="num">03</span><span>Universal Setup</span></button>
+<button class="nav-item" data-target="antislop" type="button"><span class="num">04</span><span>Anti-Slop Prompting</span></button>
+<button class="nav-item" data-target="models" type="button"><span class="num">05</span><span>Which Model to Use</span></button>
+<button class="nav-item" data-target="mcp-explainer" type="button"><span class="num">06</span><span>What is an MCP?</span></button>
+</div>
+<div class="nav-title">Figma MCP</div>
+<div class="nav-list">
+<button class="nav-item" data-target="figma-mcp" type="button"><span class="num">07</span><span>Figma MCP Official</span></button>
+<button class="nav-item" data-target="figma-console" type="button"><span class="num">08</span><span>Figma Console MCP</span></button>
+<button class="nav-item" data-target="figma-compare" type="button"><span class="num">09</span><span>Which One to Use?</span></button>
+</div>
+<div class="nav-title">Creative</div>
+<div class="nav-list">
+<button class="nav-item pillar-creative" data-target="c-intro" type="button"><span class="num">10</span><span>Creative Overview</span></button>
+<button class="nav-item pillar-creative" data-target="c-case1" type="button"><span class="num">11</span><span>Ad Variation Factory</span></button>
+<button class="nav-item pillar-creative" data-target="c-case2" type="button"><span class="num">12</span><span>Social Carousel</span></button>
+<button class="nav-item pillar-creative" data-target="c-case3" type="button"><span class="num">13</span><span>Batch Photoshop</span></button>
+<button class="nav-item pillar-creative" data-target="c-case4" type="button"><span class="num">14</span><span>Brand Guideline Build</span></button>
+<button class="nav-item pillar-creative" data-target="c-figma" type="button"><span class="num">15</span><span>Figma Creative Ops</span></button>
+<button class="nav-item pillar-creative" data-target="c-prompts" type="button"><span class="num">16</span><span>Creative Prompts</span></button>
+<button class="nav-item pillar-creative" data-target="c-tools" type="button"><span class="num">17</span><span>Creative Tools</span></button>
+</div>
+<div class="nav-title">UI/UX</div>
+<div class="nav-list">
+<button class="nav-item pillar-uiux" data-target="u-intro" type="button"><span class="num">18</span><span>UI/UX Overview</span></button>
+<button class="nav-item pillar-uiux" data-target="u-case1" type="button"><span class="num">19</span><span>Design Language System</span></button>
+<button class="nav-item pillar-uiux" data-target="u-case2" type="button"><span class="num">20</span><span>120-Variant Button</span></button>
+<button class="nav-item pillar-uiux" data-target="u-case3" type="button"><span class="num">21</span><span>Token Enforcement</span></button>
+<button class="nav-item pillar-uiux" data-target="u-case4" type="button"><span class="num">22</span><span>Wireframe to Storybook</span></button>
+<button class="nav-item pillar-uiux" data-target="u-case5" type="button"><span class="num">23</span><span>Enterprise Systems</span></button>
+<button class="nav-item pillar-uiux" data-target="u-claude-design" type="button"><span class="num">24</span><span>Claude Design for UI/UX</span></button>
+<button class="nav-item pillar-uiux" data-target="u-prompts" type="button"><span class="num">25</span><span>UI/UX Prompts</span></button>
+<button class="nav-item pillar-uiux" data-target="u-tools" type="button"><span class="num">26</span><span>UI/UX Tools</span></button>
+</div>
+<div class="nav-title">Video</div>
+<div class="nav-list">
+<button class="nav-item pillar-video" data-target="v-intro" type="button"><span class="num">27</span><span>Video Overview</span></button>
+<button class="nav-item pillar-video" data-target="v-case1" type="button"><span class="num">28</span><span>Scripting and Planning</span></button>
+<button class="nav-item pillar-video" data-target="v-case2" type="button"><span class="num">29</span><span>Descript + Claude</span></button>
+<button class="nav-item pillar-video" data-target="v-case3" type="button"><span class="num">30</span><span>Agentic Editing</span></button>
+<button class="nav-item pillar-video" data-target="v-case4" type="button"><span class="num">31</span><span>AI Video Generation</span></button>
+<button class="nav-item pillar-video" data-target="v-case5" type="button"><span class="num">32</span><span>Adobe + AE Workflows</span></button>
+<button class="nav-item pillar-video" data-target="v-prompts" type="button"><span class="num">33</span><span>Video Prompts</span></button>
+<button class="nav-item pillar-video" data-target="v-tools" type="button"><span class="num">34</span><span>Video Tools</span></button>
+</div>
+<div class="nav-title">Reference</div>
+<div class="nav-list">
+<button class="nav-item" data-target="n8n" type="button"><span class="num">35</span><span>n8n Automation</span></button>
+<button class="nav-item" data-target="token-guide" type="button"><span class="num">36</span><span>Token and Cost Guide</span></button>
+<button class="nav-item" data-target="glossary" type="button"><span class="num">37</span><span>Glossary</span></button>
+</div>
+    </nav>
+    <div class="status-card">
+      <strong>Experiment guide</strong>
+      <p>Use this as a preliminary guide for safe Claude experiments. Test on low-risk work, document what works, and refine team habits before making anything a formal SOP.</p>
+    </div>
+  </aside>
+  <main id="main">
+    
+<div class="page active cover-page" id="page-cover" data-title="Cover" data-eyebrow="2X Internal Guide" data-keywords="cover 2X claude for designers preliminary guide version 1 June 2026">
+  <div class="cover">
+    <div class="cover-copy">
+      <div class="cover-logo-wrap"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMjc2IDY3NCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4wIEJ1aWxkIDE0MikgIC0tPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3QwIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuc3QxIHsKICAgICAgICBmaWxsOiAjZmYwZjBmOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0ic3QxIiBkPSJNNTU3LjkyODUwMiw3OS4wNTc2MzZjLTEyLjY4MzU3Ny0yNC44MDE2NzYtNDAuMzA1NTIxLTQyLjAxNjctNzIuMTI0ODEyLTQyLjAxNjdsLTI0MS45OTMzMDguMDQwMTczaC01LjQ3NTc3NHYuMDM2NjE0Yy0xMDguMzgxNDczLDEuNjE1NTc3LTIwMC4xOTM3NDcsNjQuMjYwNTA2LTIwMC4xOTM3NDcsMTc3LjAzODY2OGwtLjE0MDg2MSwzLjI4NzZ2LjM1MDg4MWMwLDEwLjU1MDgzMiw4LjM1MDk2MiwxOS4xNjk3ODYsMTguNzU4MzkxLDE5Ljc2OTg0M2wxMTAuMzc0Mzc1LS4xMzkzMzVjOS4zMDY5ODUtMS4xOTE5NzgsMTYuNTkzNjA5LTguODE0NzM1LDE3LjI1MTEyOS0xOC4yNzIyNDMuMDIxODY2LS4wMTI3MTMuMDM5MTU2LS4wMzAwMDMuMDYxMDIzLS4wNDI3MTYsNC4wMDkxOTQtMzcuNDY3NDU1LDMzLjM4MzUwOC00Ny4zODU2ODQsNTguMTgxMTE1LTQ3LjM4NTY4NCwzNy4zNDA4MzIsMCw1Ni44OTk2MzgsMjIuMDM3MzQ2LDU2Ljg5OTYzOCw1My44NjkzNSwwLDI0LjQ4NTg4My04Ljg5MTAxMywzOS4xNzc2MTctMzIuMDA2NDI4LDYyLjAzMTE0Mkw2My40NDAzODEsNDkxLjQxNDc0MWMtMTUuNTAzODQ0LDE1LjQxNzkwNC0yNS4xMDkzMzIsMzYuNzYxMTE2LTI1LjEwOTMzMiw2MC4zNTQwMzRsLjAxNjI3Myw2NS4zNjA5NWMtLjAxOTMyNCwyLjUxNDEzNy4yNzcxNDUsNS4wNTIxNzQsMS4yOTc3NSw3LjUxODAwMiwzLjE1OTk2MSw3LjYzMTQwMiwxMC42MDE2ODQsMTIuMjI5NDY2LDE4LjQwNzUxLDEyLjIzODExMWwuMDczMjI3LjA3MzIyN2g0MjguMTk4NjA5YzMxLjgxOTI5MSwwLDU5LjE5MjA1OS0xNy4yMTUwMjQsNzEuODc1NjM2LTQyLjAxNjdoLjI0OTE3Nmw3OS40ODIxMi0xMjQuMDcyNDU0VjIwNC40MTQxMWwtODAuMDAyODQ4LTEyNS4zNTY0NzVaTTQ1OS42MzEwMzYsNDgwLjgxNzYzNGMtMTMuNzUyNDkyLDIwLjcyOTkzNC0zOC41OTg5MTgsMzQuOTg0ODQ2LTY2Ljg4NzAyNywzNS4zNDM4NjNoLTE1MS4xNTk0MzJjLTUuNzUyNDEsMC0xMC40MTQ1NDgtNC42NjMxNTQtMTAuNDE0NTQ4LTEwLjQxNjA3MywwLTMuMDQwNDU4LDEuMjI0NTIzLTUuNzE4MzM5LDMuMzEyMDA5LTcuNTkzNzcybDEzMi42MTMwOTUtMTI4LjkwNjQ3MmM1MC42NzYzMzUtNDguOTcxNzY3LDc4LjIzODI3My04MS42MTk5NSw3OC4yMzgyNzMtMTQyLjgzNDkxMywwLTEzLjQyNDQ5NS0xLjM1MDEyOC0yNi4xNTg5MjQtMy44MzAxOTQtMzguMjMyMjczbC0uMTUyNTU3LTEuNjc4NjM0YzAtMy4yNTI1MTIsMi42MzcxOTktNS44ODkyMDMsNS44OTA3MjktNS44ODkyMDMsMi4xNTgxNzEsMCwzLjk2NDQ0NCwxLjIxODQyMSw0Ljk4OTYyNiwyLjk0OTk0MWwxMDEuNDI5OTY2LDE1My40Mzk2NDktOTQuMDI5OTQyLDE0My44MTc4ODhaIi8+CiAgPGc+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIxNy43OTUzNyw1OTYuOTY3MzAybC0zMTYuNzA1OTkyLS4wMDA1MDljLTEwLjk5NzgyNCwwLTE5Ljk5NjEzNS04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3LDAtMTAuOTk2Mjk4LDguOTk0NzUyLTE5Ljk5MjU3NiwxOS45OTEwNS0xOS45OTU2MjdoMTI2Ljc0OTgyN2MxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNXMtOC45OTgzMTItMTkuOTk2MTM1LTE5Ljk5NjEzNS0xOS45OTYxMzVoLTE0NC43MTU5MzljLTI4LjI4ODEwOS0uMzU5MDE3LTUzLjEzNDUzNS0xNS40MzU3MDItNjYuODg3MDI3LTM2LjE2NTYzNmwtOTQuMDI5OTQyLTE0My44MTc4ODgsNTcuNTA3MzIzLTg2Ljk5NTAzN2M1LjI0OTQ4MS03LjgxNDQ3MSwxNC4xNTc3ODQtMTIuOTYzNzczLDI0LjI3ODkxNS0xMi45NjM3NzNoMTUyLjc1MDA5MmMxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNXMtOC45OTgzMTItMTkuOTk1NjI3LTE5Ljk5NjEzNS0xOS45OTU2MjdsLTEwNC4wNzU4MTEtLjAwMDUwOWMtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LTguOTk3ODAzLTE5Ljk5NjEzNS0xOS45OTU2MjdzOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNS0xOS45OTYxMzVoMzQ1LjUxOTkxNGMxMC45OTc4MjQsMCwxOS45OTU2MjctOC45OTc4MDMsMTkuOTk1NjI3LTE5Ljk5NTYyN3MtOC45OTc4MDMtMTkuOTk2MTM1LTE5Ljk5NTYyNy0xOS45OTYxMzVoLTI5Ni4wNTA4MTJjLTEwLjk5NzgyNCwwLTE5Ljk5NjEzNS04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3czguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzUtMTkuOTk2MTM1aDE0Mi43ODMwNDRjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk4MzEyLDE5Ljk5NjEzNS0xOS45OTYxMzVzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1bC0yNTQuODU1Mzc2LS4wNDAxNzNjLTMxLjgxOTI5MSwwLTU5LjQ0MTIzNSwxNy4yMTUwMjQtNzIuMTI0ODEyLDQyLjAxNjdsLTgwLjAwMjMzOSwxMjUuMzU2NDc1djI2Ni40NTU3OTlsNzkuNDgxNjEyLDEyNC4wNzI0NTRoLjI0OTE3NmMxMi42ODM1NzcsMjQuODAxNjc2LDQwLjA1NjM0NCw0Mi4wMTY3LDcxLjg3NTYzNiw0Mi4wMTY3aDQyOC4yNTc1OTdjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk3ODAzLDE5Ljk5NjEzNS0xOS45OTU2MjdzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1WiIvPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEyMTcuNzk1MzcsNTE2Ljk4MzI3aC0xMDkuMDIzMjI5Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNXM4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNWgxMDkuMDIzMjI5YzEwLjk5NzgyNCwwLDE5Ljk5NjEzNS04Ljk5ODMxMiwxOS45OTYxMzUtMTkuOTk2MTM1cy04Ljk5ODMxMi0xOS45OTYxMzUtMTkuOTk2MTM1LTE5Ljk5NjEzNVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMDI3LjQ3MDAxNyw0NzYuOTkxNTA4aDEyMi42MTE5NzdjMTAuOTk3ODI0LDAsMTkuOTk2MTM1LTguOTk4MzEyLDE5Ljk5NjEzNS0xOS45OTYxMzVzLTguOTk4MzEyLTE5Ljk5NjEzNS0xOS45OTYxMzUtMTkuOTk2MTM1aC0xMjIuNjExOTc3Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTgzMTItMTkuOTk2MTM1LDE5Ljk5NjEzNXM4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0xMTExLjExNTkyMywxOTcuMDQ5MTc0Yy0xMC45OTc4MjQsMC0xOS45OTYxMzUsOC45OTc4MDMtMTkuOTk2MTM1LDE5Ljk5NTYyN3M4Ljk5ODMxMiwxOS45OTYxMzUsMTkuOTk2MTM1LDE5Ljk5NjEzNWgxMDYuODg3OTQyYzEwLjk5NzgyNCwwLDE5Ljk5NjEzNS04Ljk5ODMxMiwxOS45OTYxMzUtMTkuOTk2MTM1cy04Ljk5ODMxMi0xOS45OTU2MjctMTkuOTk2MTM1LTE5Ljk5NTYyN2gtMTA2Ljg4Nzk0MloiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik05NDYuMDkzNjUsMzk3LjAwODQ5MmgxMjIuNjExOTc3YzEwLjk5NzgyNCwwLDE5Ljk5NTYyNy04Ljk5NzgwMywxOS45OTU2MjctMTkuOTk1NjI3cy04Ljk5NzgwMy0xOS45OTYxMzUtMTkuOTk1NjI3LTE5Ljk5NjEzNWgtMTIyLjYxMTk3N2MtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LDguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzVzOC45OTgzMTIsMTkuOTk1NjI3LDE5Ljk5NjEzNSwxOS45OTU2MjdaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTAwOS40NzM5MDMsMjk3LjAyODgzM2MwLTEwLjk5NzgyNC04Ljk5ODMxMi0xOS45OTYxMzUtMTkuOTk2MTM1LTE5Ljk5NjEzNWgtMTE4LjU1NzAxNmMtMTAuOTk3ODI0LDAtMTkuOTk2MTM1LDguOTk4MzEyLTE5Ljk5NjEzNSwxOS45OTYxMzVzOC45OTgzMTIsMTkuOTk2MTM1LDE5Ljk5NjEzNSwxOS45OTYxMzVoMTE4LjU1NzAxNmMxMC45OTc4MjQsMCwxOS45OTYxMzUtOC45OTgzMTIsMTkuOTk2MTM1LTE5Ljk5NjEzNVoiLz4KICA8L2c+Cjwvc3ZnPg==" alt="2X logo" class="cover-logo" /></div>
+      <div class="eyebrow">2X internal guide</div>
+      <h1 class="cover-title">Claude for Designers</h1>
+      <p class="lead">A beginner-friendly, experiment-first playbook for designers across Creative, UI/UX, and Video teams to explore Claude safely, build stronger prompts, and test simple tool-connected workflows.</p>
+      <div class="tag-row">
+        <span class="tag">Version 1</span>
+        <span class="tag">June 2026</span>
+        <span class="tag">Experiment stage</span>
+        <span class="tag">Dark 2X theme</span>
+      </div>
+      <div class="metric-row">
+        <div class="metric"><b>3</b><span>Design pillars</span></div>
+        <div class="metric"><b>37</b><span>Guide pages</span></div>
+        <div class="metric"><b>0</b><span>Coding confidence required</span></div>
+      </div>
+    </div>
+    <div class="cover-card" aria-label="Decorative Claude workflow visual">
+      <div class="orbital"></div>
+      <div class="floating-chip chip-a"><b>Prompt smarter</b><span>Context, task, constraints</span></div>
+      <div class="floating-chip chip-b"><b>Review safely</b><span>Human judgment stays first</span></div>
+      <div class="floating-chip chip-c"><b>Build faster</b><span>Drafts, checks, prototypes</span></div>
+    </div>
+  </div>
+</div>
+<div class="page" data-eyebrow="Getting Started" data-keywords="Claude for Designers Getting Started Getting Started Claude for Designers A practical, experiment-first guide for 2X designers across Creative, UI/UX, and Video — showing exactly how Claude fits into real work, with real examples and ready-to-use prompts. Version 1, June 2026. Why this guide exists Claude is not a magic button. It will not replace your design instinct, your client relationships, or your taste. What it will do is remove the repetitive, time-consuming work that gets between you and the parts of the job you actually w" data-title="Claude for Designers" id="page-intro">
+<div class="page-eyebrow">Getting Started</div>
+<h1 class="page-title">Claude for Designers</h1>
+<p class="page-intro">A practical, experiment-first guide for 2X designers across Creative, UI/UX, and Video — showing exactly how Claude fits into real work, with real examples and ready-to-use prompts. Version 1, June 2026.</p>
+<h2>Why this guide exists</h2>
+<p>Claude is not a magic button. It will not replace your design instinct, your client relationships, or your taste. What it <em>will</em> do is remove the repetitive, time-consuming work that gets between you and the parts of the job you actually want to do.</p>
+<p>This guide was built from real case studies — documented workflows from designers who are already using Claude on real projects — plus hands-on research into every tool and connector available as of June 2026.</p>
+<div class="callout">
+<div class="callout-label">How to Use This Guide</div>
+<p>Jump straight to your pillar using the left menu. Each pillar starts with a case study that shows you what's possible, then explains exactly how to do it yourself. If you're new to Claude entirely, read the Getting Started section first — it covers setup, model selection, and the one technique that separates good Claude output from generic AI output.</p>
+</div>
+<h2>What you'll need</h2>
+<ul>
+<li><strong>Claude account</strong> — Pro plan minimum ($20/month). Max plan ($100/month) is recommended for heavy design work because it gives you more usage per day.</li>
+<li><strong>Claude Desktop app</strong> — the desktop app unlocks MCP connections. The web browser version does not support MCPs. Download it free from claude.ai.</li>
+<li><strong>A Figma account</strong> — Professional plan or above for MCP write access. Free plan is read-only.</li>
+<li><strong>Patience for the first session</strong> — the first time you connect Claude to a tool (like Figma), there's a setup step. After that, it's one click.</li>
+</ul>
+<div class="callout">
+<div class="callout-label">Important Note on Costs</div>
+<p>This guide covers both Claude.ai (subscription) and the Claude API (pay-per-use). If you're just experimenting, stick to Claude.ai — your monthly fee covers everything. The API pricing section at the end of this guide is only relevant if you're building automated workflows in n8n or similar tools.</p>
+</div>
+<h2>The three pillars</h2>
+<div class="tool-grid">
+<div class="tool-card" style="border-top:3px solid var(--purple)">
+<div class="tool-name" style="color:var(--purple)">Creative Designer</div>
+<div class="tool-desc">Campaign assets, social content, brand identity, ad variations, pitch decks, Figma production ops.</div>
+</div>
+<div class="tool-card" style="border-top:3px solid var(--blue)">
+<div class="tool-name" style="color:var(--blue)">UI/UX Designer</div>
+<div class="tool-desc">Design systems, tokens, components, wireframes, handoff, accessibility audits.</div>
+</div>
+<div class="tool-card" style="border-top:3px solid var(--teal)">
+<div class="tool-name" style="color:var(--teal)">Video Designer</div>
+<div class="tool-desc">Scripting, edit planning, repurposing, captions, agentic editing, motion graphics.</div>
+</div>
+</div>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: 2X team overview illustration</div>
+<div class="img-desc">Recommended: abstract graphic showing three designer paths converging into Claude. Dark background. Use 2X brand abstract graphic style.</div>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Getting Started" data-keywords="Universal Setup Getting Started Getting Started Universal Setup Do this once. Every pillar in this guide builds on this foundation. It takes about 30–60 minutes for a careful first-timer. Step 1 — Install Claude Desktop 1 Go to claude.ai/download and download the Claude Desktop app for macOS (or Windows). This is different from the Claude website — the app is what enables MCP connections. 2 Sign in with your Claude account. If you only have a free account, this is the moment to upgrade to Pro or Max. 3 Open Settings (the gear " data-title="Universal Setup" id="page-setup">
+<div class="page-eyebrow">Getting Started</div>
+<h1 class="page-title">Universal Setup</h1>
+<p class="page-intro">Do this once. Every pillar in this guide builds on this foundation. It takes about 30–60 minutes for a careful first-timer.</p>
+<h2>Step 1 — Install Claude Desktop</h2>
+<ol class="step-list">
+<li><span class="step-num">1</span><div>Go to <strong>claude.ai/download</strong> and download the Claude Desktop app for macOS (or Windows). This is different from the Claude website — the app is what enables MCP connections.</div></li>
+<li><span class="step-num">2</span><div>Sign in with your Claude account. If you only have a free account, this is the moment to upgrade to Pro or Max.</div></li>
+<li><span class="step-num">3</span><div>Open <strong>Settings</strong> (the gear icon, bottom-left). Under the Features tab, turn on: <em>Code execution and file creation</em>, <em>Artifacts</em>, and <em>Search and reference past chats</em>.</div></li>
+</ol>
+<h2>Step 2 — Create a Project for your work</h2>
+<p>Projects are like dedicated workspaces inside Claude. When you create a Project, Claude remembers your preferences, your brand rules, and your previous conversations within it. This is important — without a Project, Claude starts from scratch every session.</p>
+<ol class="step-list">
+<li><span class="step-num">1</span><div>In Claude Desktop, click <strong>New Project</strong> in the left sidebar.</div></li>
+<li><span class="step-num">2</span><div>Name it something like "2X Design Work" or your specific project name.</div></li>
+<li><span class="step-num">3</span><div>In the Project Instructions box, paste a short description of your brand context. For 2X work, something like: <em>"You are working within 2X brand guidelines. Primary colours: Red #FF0F0F, Dark Gray #151515, White #FFFFFF. Typography: Inter Variable. Brand tone: bold, innovative, approachable. Always reference these when producing design-related outputs."</em></div></li>
+</ol>
+<h2>Step 3 — Connect your first Connector</h2>
+<p>Connectors are one-click integrations that let Claude talk to other tools. You connect them in Claude.ai (the browser version) or Claude Desktop under <strong>Settings → Connectors</strong>.</p>
+<p><strong>Recommended order to connect:</strong></p>
+<ol>
+<li><strong>Google Drive</strong> — for brief intake, file sharing, and export. Free.</li>
+<li><strong>Figma</strong> — for the UIUX and Creative pillars. Requires Figma Professional+ for write access.</li>
+<li><strong>Adobe for creativity</strong> — for Creative and Video pillars. Requires an Adobe Creative Cloud subscription.</li>
+<li><strong>Canva</strong> — for Creative pillar. Free to connect; some features need Canva Pro.</li>
+<li><strong>Slack</strong> — for approval loops. Requires a paid Slack workspace.</li>
+</ol>
+<div class="callout">
+<div class="callout-label">What is a Connector?</div>
+<p>A Connector is a pre-built, verified integration that lets Claude access another app on your behalf. When you connect Figma, Claude can read your Figma files and (with the right account level) write directly to them. You always control what Claude can access — you approve each connection via a login screen, just like any other "Sign in with Google" flow.</p>
+</div>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: Claude Desktop connectors screen</div>
+<div class="img-desc">Screenshot of Claude Desktop Settings → Connectors panel showing Figma, Canva, Adobe, and Google Drive listed.</div>
+</div>
+<div class="hitl-box">
+<div class="hitl-label">Your First HITL Gate</div>
+<p>Before moving to your pillar, test one connector. Open Claude, connect Google Drive, and ask Claude to "list the five most recently modified files in my Google Drive." If Claude can see your files, your setup is working. If it can't, re-check that you're in Claude Desktop (not the browser version) and that you approved the Google Drive connection in Settings.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Getting Started" data-keywords="Anti-Slop Prompting Getting Started Getting Started Anti-Slop Prompting The single most important technique in this entire guide. Every designer who gets great results from Claude uses this. Every designer who gets generic, forgettable output doesn't. What is &quot;AI slop&quot;? When you ask Claude (or any AI) to design something without telling it your aesthetic preferences, it produces what it has seen most often in its training: Inter font, purple gradient on white, three equal-size cards in a row, and a generic hero section. This is &quot;A" data-title="Anti-Slop Prompting" id="page-antislop">
+<div class="page-eyebrow">Getting Started</div>
+<h1 class="page-title">Anti-Slop Prompting</h1>
+<p class="page-intro">The single most important technique in this entire guide. Every designer who gets great results from Claude uses this. Every designer who gets generic, forgettable output doesn't.</p>
+<h2>What is "AI slop"?</h2>
+<p>When you ask Claude (or any AI) to design something without telling it your aesthetic preferences, it produces what it has seen most often in its training: Inter font, purple gradient on white, three equal-size cards in a row, and a generic hero section. This is "AI slop" — technically correct, visually boring, and instantly recognisable as machine-generated.</p>
+<p>The solution is not a different tool. It is a more specific brief.</p>
+<h2>The four fixes</h2>
+<ol class="step-list">
+<li><span class="step-num">1</span><div><strong>Name your aesthetic family.</strong> "Minimalist" is vague. "Brutalist editorial, like a 1990s fashion magazine printed on newsprint" is specific. Give Claude something to aim for.</div></li>
+<li><span class="step-num">2</span><div><strong>Name the fonts you want AND the ones you don't.</strong> Example: "Use Clash Display for headings and Fraunces for body. Do not use Inter, Roboto, or Arial."</div></li>
+<li><span class="step-num">3</span><div><strong>Give a reference URL or describe a reference.</strong> "Similar to the visual direction of linear.app" or "Reference: [paste a Dribbble or Behance URL]." Claude can look at a URL and extract the aesthetic direction.</div></li>
+<li><span class="step-num">4</span><div><strong>List what you do NOT want.</strong> "Avoid gradients. No rounded cards. No stock-photo style imagery. No three-column equal-width grid."</div></li>
+</ol>
+<h2>The Anti-Slop Brief Block</h2>
+<p>Copy this block into your Project Instructions (or paste it at the start of any design session). Replace the values in brackets with your actual preferences.</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+You are producing design work for [CLIENT/PROJECT NAME].
+
+Aesthetic direction: [e.g. "Clean, enterprise SaaS. Confident and quiet. No decorative elements."]
+Typography: Use [FONT NAME] for headings. Use [FONT NAME] for body. Never use Inter, Roboto, or Arial.
+Colour: Primary [HEX], secondary [HEX], accent [HEX]. Dominant colour plus one sharp accent only.
+References: [URL or description of visual references]
+Do NOT use: [list defaults to avoid — e.g. purple gradients, three-card grids, stock-photo heroes]
+Motion: One deliberate animation moment per page load. Nothing decorative.
+  </div>
+<div class="callout">
+<div class="callout-label">For 2X Projects</div>
+<p>Replace the above with 2X brand values: Red #FF0F0F, Dark Gray #151515, Inter Variable at the weights in our brand system. Reference 2X.marketing for visual direction. Avoid any colours outside the primary and secondary palette.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Getting Started" data-keywords="Which Model to Use Getting Started Getting Started Which Model to Use Claude has three model tiers: Haiku (fast and cheap), Sonnet (balanced), and Opus (powerful but expensive). Picking the right one saves money and time. Model Best for Avoid for Cost signal Haiku 4.5 Tagging, classification, metadata, quick text cleanup, routing decisions Anything creative or complex Cheapest — about $1 per million words in Sonnet 4.6 ⭐ Everything in this guide — briefs, copy, tokens, code, critiques, handoffs Nothing design-related needs more t" data-title="Which Model to Use" id="page-models">
+<div class="page-eyebrow">Getting Started</div>
+<h1 class="page-title">Which Model to Use</h1>
+<p class="page-intro">Claude has three model tiers: Haiku (fast and cheap), Sonnet (balanced), and Opus (powerful but expensive). Picking the right one saves money and time.</p>
+<table class="comparison-table">
+<thead><tr><th>Model</th><th>Best for</th><th>Avoid for</th><th>Cost signal</th></tr></thead>
+<tbody>
+<tr><td><strong>Haiku 4.5</strong></td><td>Tagging, classification, metadata, quick text cleanup, routing decisions</td><td>Anything creative or complex</td><td>Cheapest — about $1 per million words in</td></tr>
+<tr><td><strong>Sonnet 4.6</strong> ⭐</td><td>Everything in this guide — briefs, copy, tokens, code, critiques, handoffs</td><td>Nothing design-related needs more than this</td><td>Mid — about $3 per million words in</td></tr>
+<tr><td><strong>Opus 4.x</strong></td><td>Very complex systems design, multi-document synthesis, long-horizon reasoning</td><td>Image-heavy tasks — it charges 3× more per screenshot</td><td>Higher — about $5 per million words in</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<div class="callout-label">⚠️ Important for Designers</div>
+<p>If your task involves uploading screenshots or mockup images, <strong>do not use Opus 4.7 or 4.8</strong>. These models charge approximately 3× more per image token than previous versions. For visual tasks, Sonnet 4.6 gives you 95% of the capability at a fraction of the cost. A typical 1000×1000px screenshot costs about $0.02 on Sonnet and $0.07 on Opus 4.7+.</p>
+</div>
+<p><strong>In Claude.ai (the subscription interface),</strong> models map to daily usage limits rather than per-use cost. If you're on the Pro plan, Claude may suggest switching to a lighter model during heavy use periods — that's normal. Switch back when your limit resets.</p>
+
+</div>
+<div class="page" data-eyebrow="Getting Started" data-keywords="What is an MCP? Getting Started Getting Started What is an MCP? MCP stands for Model Context Protocol. It sounds technical — but the idea is simple: it is a connector that lets Claude reach into another application and do things there, not just talk about them. The plain-English version Without an MCP, Claude can only read and write text in your conversation. With an MCP connected to Figma, Claude can actually open your Figma file, read your layers, create components, and write design tokens — all from inside Claude, while you" data-title="What is an MCP?" id="page-mcp-explainer">
+<div class="page-eyebrow">Getting Started</div>
+<h1 class="page-title">What is an MCP?</h1>
+<p class="page-intro">MCP stands for Model Context Protocol. It sounds technical — but the idea is simple: it is a connector that lets Claude reach into another application and do things there, not just talk about them.</p>
+<h2>The plain-English version</h2>
+<p>Without an MCP, Claude can only read and write text in your conversation. With an MCP connected to Figma, Claude can actually open your Figma file, read your layers, create components, and write design tokens — all from inside Claude, while you watch it happen in Figma.</p>
+<p>Think of an MCP as a remote control. Claude is the brain. The MCP is the remote that lets the brain press buttons inside another app.</p>
+<h2>MCPs vs Connectors — what's the difference?</h2>
+<p>In Claude.ai, <strong>Connectors</strong> are pre-built, one-click MCPs that have been vetted by Anthropic. They're the easiest way to connect Claude to Figma, Canva, Adobe, or Google Drive — you connect via a login screen, no setup required.</p>
+<p><strong>MCPs</strong> (in Claude Desktop or Claude Code) are the same technology, but you can install them yourself — including community-built ones that aren't in the official directory. This is what you use to connect to tools like Jumper (video editing) or Descript that aren't yet in the Connector directory.</p>
+<div class="callout">
+<div class="callout-label">For Beginners</div>
+<p>Start with Connectors. They're in Settings and work with one click. Only look at custom MCPs once you've built a few weeks of experience with the Connector-based workflows in this guide.</p>
+</div>
+<h2>How to install a custom MCP (when you need one)</h2>
+<p>This is covered in each pillar's Tool Stack section. The general process is:</p>
+<ol>
+<li>Open Claude Desktop → Settings → Developer → Edit Config</li>
+<li>Add the MCP's connection details (usually a URL or an install command)</li>
+<li>Restart Claude Desktop</li>
+<li>The new tool appears in Claude's available tools list</li>
+</ol>
+
+</div>
+<div class="page" data-eyebrow="Figma MCP" data-keywords='Figma MCP — The Official One Figma MCP Figma MCP Figma MCP — The Official One Made by Figma. The primary bridge between Claude Code and your Figma files. Reads your designs and can write back to the canvas. What it does Reads your Figma file structure — layers, components, variables, auto-layout, styles Generates code from selected frames (works best with Code Connect set up) Writes to the canvas — creates frames, components, variables, and text Converts live web UIs into editable Figma layers ("Send this to Figma") Creates FigJam di' data-title="Figma MCP — The Official One" id="page-figma-mcp">
+<div class="page-eyebrow">Figma MCP</div>
+<h1 class="page-title">Figma MCP — The Official One</h1>
+<p class="page-intro">Made by Figma. The primary bridge between Claude Code and your Figma files. Reads your designs and can write back to the canvas.</p>
+<h2>What it does</h2>
+<ul>
+<li>Reads your Figma file structure — layers, components, variables, auto-layout, styles</li>
+<li>Generates code from selected frames (works best with Code Connect set up)</li>
+<li>Writes to the canvas — creates frames, components, variables, and text</li>
+<li>Converts live web UIs into editable Figma layers ("Send this to Figma")</li>
+<li>Creates FigJam diagrams from Claude prompts (flowcharts, Gantt charts)</li>
+</ul>
+<h2>How to connect it (3 steps)</h2>
+<ol class="step-list">
+<li><span class="step-num">1</span><div><strong>In Claude.ai:</strong> Go to Settings → Connectors → click "+" → search "Figma" → Connect. Sign in with your Figma account. Done — no install needed.</div></li>
+<li><span class="step-num">2</span><div><strong>In Claude Code (for the full write-to-canvas features):</strong> Run <code>claude mcp add --transport http figma https://mcp.figma.com/mcp</code> in your terminal. Or install the Figma plugin from the Figma Community page which sets this up for you.</div></li>
+<li><span class="step-num">3</span><div><strong>Authenticate:</strong> Claude will prompt you to log in to Figma the first time. Do this from the Figma Desktop app for the best results — not the browser.</div></li>
+</ol>
+<div class="callout">
+<div class="callout-label">Plan Requirements</div>
+<p>Reading Figma files: works on all plans including Free. Writing to the canvas (creating layers, components, variables): requires a Figma Professional seat or above. The write-to-canvas feature is currently free during beta — pricing for it has not been confirmed yet.</p>
+</div>
+<h2>16 tools available</h2>
+<p>The official Figma MCP gives Claude 16 tools including: design context export, variable definitions, Code Connect mappings, screenshots, design system search, frame-to-code generation, and write-to-canvas operations. For most designers in this guide, you'll use three or four of these regularly.</p>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: Figma MCP in action</div>
+<div class="img-desc">Screenshot or screen recording still of Claude Code writing design tokens into Figma variables panel. Show the Claude chat on one side, Figma with tokens appearing on the other.</div>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Figma MCP" data-keywords="Figma Console MCP Figma MCP Figma MCP Figma Console MCP Made by Southleft — an independent studio, not Figma. Open-source, free, with 57+ tools versus the official 16. The power tool option. What makes it different The official Figma MCP talks to Figma through the REST API — which is read-only for design data. You can read a file, but you can't create a rectangle or change a fill colour directly. Figma Console MCP runs a Desktop Bridge plugin inside Figma using the Plugin API. This means anything a Figma plugin can do, Cla" data-title="Figma Console MCP" id="page-figma-console">
+<div class="page-eyebrow">Figma MCP</div>
+<h1 class="page-title">Figma Console MCP</h1>
+<p class="page-intro">Made by Southleft — an independent studio, not Figma. Open-source, free, with 57+ tools versus the official 16. The power tool option.</p>
+<h2>What makes it different</h2>
+<p>The official Figma MCP talks to Figma through the REST API — which is read-only for design data. You can read a file, but you can't create a rectangle or change a fill colour directly.</p>
+<p>Figma Console MCP runs a Desktop Bridge plugin <em>inside</em> Figma using the Plugin API. This means anything a Figma plugin can do, Claude can do — create nodes, modify properties, manage variables in bulk, listen for real-time events.</p>
+<h2>Key capabilities the official MCP doesn't have</h2>
+<ul>
+<li><strong>Full design system extraction in one call</strong> — no need to navigate layer by layer</li>
+<li><strong>57+ tools</strong> including 11 dedicated variable/token management tools</li>
+<li><strong>Batch operations</strong> — handle up to 100 variables per call (10–50× faster than individual calls)</li>
+<li><strong><code>figma_setup_design_tokens</code></strong> — creates an entire token system (collection, modes, all variables) in one single operation</li>
+<li><strong>Real-time awareness</strong> — Claude knows what layer you've selected, what changed, and what page you're on</li>
+<li><strong>Health scoring</strong> — analyses your design system for inconsistencies and flags them</li>
+<li><strong>Open source (MIT)</strong> — free, no API keys required</li>
+</ul>
+<h2>How to install</h2>
+<ol class="step-list">
+<li><span class="step-num">1</span><div>Install the <strong>Figma Console MCP Desktop Bridge</strong> plugin from the Figma Community. This is the plugin that runs inside Figma and gives Claude write access.</div></li>
+<li><span class="step-num">2</span><div>Find your Claude config file. On Mac: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>. Open it in any text editor.</div></li>
+<li><span class="step-num">3</span><div>Add the server entry shown below and save the file. Restart Claude Desktop.</div></li>
+</ol>
+<div class="prompt-block" style="color:#f8c291">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+{
+  "mcpServers": {
+    "figma-console": {
+      "command": "npx",
+      "args": ["-y", "figma-console-mcp"]
+    }
+  }
+}
+  </div>
+<div class="callout">
+<div class="callout-label">Where to Find Your Config File</div>
+<p>Mac: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code><br/>Windows: <code>%APPDATA%\Claude\claude_desktop_config.json</code><br/>If the file doesn't exist yet, create it. Full guide: github.com/southleft/figma-console-mcp</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Figma MCP" data-keywords="Which Figma MCP to Use? Figma MCP Figma MCP Which Figma MCP to Use? Quick comparison so you can decide in 60 seconds. Source: Southleft, March 2026. Figma MCP (Official) Figma Console MCP Made by Figma, Inc. Southleft (community, MIT) Number of tools 16 tools 57+ tools Can READ Figma files ✓ ✓ Can WRITE to canvas ✓ (via rendered web UI capture) ✓ (direct Plugin API — full access) Create design elements programmatically ✗ ✓ Variable/token batch operations ✗ ✓ 11 dedicated tools, 100/call Real-time layer awareness ✗ ✓ WebSocket br" data-title="Which Figma MCP to Use?" id="page-figma-compare">
+<div class="page-eyebrow">Figma MCP</div>
+<h1 class="page-title">Which Figma MCP to Use?</h1>
+<p class="page-intro">Quick comparison so you can decide in 60 seconds. Source: Southleft, March 2026.</p>
+<table class="comparison-table">
+<thead><tr><th></th><th>Figma MCP (Official)</th><th>Figma Console MCP</th></tr></thead>
+<tbody>
+<tr><td>Made by</td><td>Figma, Inc.</td><td>Southleft (community, MIT)</td></tr>
+<tr><td>Number of tools</td><td>16 tools</td><td>57+ tools</td></tr>
+<tr><td>Can READ Figma files</td><td class="check">✓</td><td class="check">✓</td></tr>
+<tr><td>Can WRITE to canvas</td><td class="check">✓ (via rendered web UI capture)</td><td class="check">✓ (direct Plugin API — full access)</td></tr>
+<tr><td>Create design elements programmatically</td><td class="cross">✗</td><td class="check">✓</td></tr>
+<tr><td>Variable/token batch operations</td><td class="cross">✗</td><td class="check">✓ 11 dedicated tools, 100/call</td></tr>
+<tr><td>Real-time layer awareness</td><td class="cross">✗</td><td class="check">✓ WebSocket bridge</td></tr>
+<tr><td>Design system health scoring</td><td class="cross">✗</td><td class="check">✓</td></tr>
+<tr><td>Design-to-code (Code Connect)</td><td class="check">✓</td><td>Partial</td></tr>
+<tr><td>Setup difficulty</td><td>Easy (Connector or one command)</td><td>Medium (config file edit required)</td></tr>
+<tr><td>Cost</td><td class="tag tag-free">Free (beta)</td><td class="tag tag-free">Free (MIT)</td></tr>
+</tbody>
+</table>
+<h2>My recommendation</h2>
+<div class="callout">
+<div class="callout-label">Start Here</div>
+<p><strong>If you're new to Claude + Figma:</strong> use the Official Figma MCP. Install it as a Connector in one click. It handles 90% of what this guide covers and requires no config file editing.</p>
+</div>
+<div class="callout blue">
+<div class="callout-label">Upgrade When</div>
+<p><strong>If you're doing serious design system work</strong> — batch token creation, variable health scoring, real-time co-editing — add Figma Console MCP. It lives alongside the official MCP; you don't have to choose one or the other.</p>
+</div>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: Side-by-side architecture diagram</div>
+<div class="img-desc">Diagram showing "Official MCP → REST API → Figma" vs "Console MCP → Plugin API → Figma" with two-way arrows for Console and one-way for Official. Dark background, 2X brand colours.</div>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Pillar 1 — Creative Designer" data-keywords="Claude for Creative Designers Pillar 1 — Creative Designer Pillar 1 — Creative Designer Claude for Creative Designers Claude's biggest verified win for creative designers is in the production layer — variations, reformats, copy, compliance checks. The concept belongs to you. The 100 variants, the aspect-ratio reformats, the copy that has to be under 30 characters — that's where Claude earns its keep. What this pillar covers Generating ad creative variations at scale using Figma Social content production via Canva connector Batch Photoshop operations fro" data-title="Claude for Creative Designers" id="page-c-intro">
+<div class="page-eyebrow creative">Pillar 1 — Creative Designer</div>
+<h1 class="page-title">Claude for Creative Designers</h1>
+<p class="page-intro">Claude's biggest verified win for creative designers is in the production layer — variations, reformats, copy, compliance checks. The concept belongs to you. The 100 variants, the aspect-ratio reformats, the copy that has to be under 30 characters — that's where Claude earns its keep.</p>
+<h2>What this pillar covers</h2>
+<ul>
+<li>Generating ad creative variations at scale using Figma</li>
+<li>Social content production via Canva connector</li>
+<li>Batch Photoshop operations from templates</li>
+<li>Building brand guidelines from existing assets</li>
+<li>Reducing repetitive Figma ops (renaming, text insertion, frame management)</li>
+<li>n8n automation for copy generation and delivery loops</li>
+</ul>
+<div class="callout purple">
+<div class="callout-label">The Creative Designer's Mental Model</div>
+<p>Find your most repetitive production task. The one where you're copy-pasting the same headline into 12 different ad formats, or resizing the same asset for six platforms. That task, not the creative concept, is where you start with Claude.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Creative — Case Study 1" data-keywords="The Ad Variation Factory Creative — Case Study 1 Creative — Case Study 1 The Ad Variation Factory How a non-technical growth marketer built a system that generates 100 ad variants in 30 seconds — without writing a single line of code themselves. Creative ✓ Verified Growth marketing team — global B2B tech company A growth marketer with no coding background needed to produce ad variations at scale — same creative brief, different headline and description combinations, across multiple ad formats. Manually, this was 30 minutes of copy-paste per ad" data-title="The Ad Variation Factory" id="page-c-case1">
+<div class="page-eyebrow creative">Creative — Case Study 1</div>
+<h1 class="page-title">The Ad Variation Factory</h1>
+<p class="page-intro">How a non-technical growth marketer built a system that generates 100 ad variants in 30 seconds — without writing a single line of code themselves.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-creative">Creative</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Growth marketing team — global B2B tech company</span>
+</div>
+<div class="case-body">
+<p>A growth marketer with no coding background needed to produce ad variations at scale — same creative brief, different headline and description combinations, across multiple ad formats. Manually, this was 30 minutes of copy-paste per ad set.</p>
+<p>Using Claude Code pointed at the Figma API documentation, they built a Figma plugin that: identifies all template frames in a file, swaps headline and description text across each frame, and generates up to 100 variations with one click.</p>
+</div>
+</div>
+<div class="case-metrics">
+<div class="metric-box"><div class="metric-value">30s</div><div class="metric-label">was 30 min per ad set</div></div>
+<div class="metric-box"><div class="metric-value">100×</div><div class="metric-label">variations per template</div></div>
+<div class="metric-box"><div class="metric-value">10×</div><div class="metric-label">more creative output</div></div>
+<div class="metric-box"><div class="metric-value">15min</div><div class="metric-label">copy (was 2 hours)</div></div>
+</div>
+<h2>How they did it</h2>
+<ol class="step-list">
+<li><span class="step-num" style="background:var(--purple)">1</span><div>Opened Claude Code and described the problem: "I have a Figma template with 12 frames. Each frame needs a different headline and description. I want one button that generates all versions."</div></li>
+<li><span class="step-num" style="background:var(--purple)">2</span><div>Pointed Claude at the Figma API documentation URL. Claude read the docs and built a barely-working prototype.</div></li>
+<li><span class="step-num" style="background:var(--purple)">3</span><div>Iterated: tested the prototype, described what was wrong, let Claude fix it. Repeat.</div></li>
+<li><span class="step-num" style="background:var(--purple)">4</span><div>Daily workflow: select master template layer in Figma → "Identify Template Components" → edit headline/description per element → one click generates all permutations.</div></li>
+</ol>
+<h2>The copy generation workflow</h2>
+<p>For each ad set, they used a validated prompt structure to generate all headline and description variants in one go:</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Generate ad copy for a Google Responsive Search Ad.
+
+Product: [PRODUCT NAME]
+Audience: [TARGET AUDIENCE]
+Key benefit: [ONE SENTENCE]
+Tone: [e.g. confident, direct, no jargon]
+
+Output:
+- 15 headlines, each under 30 characters. Number each one.
+- 4 descriptions, each under 90 characters. Number each one.
+- Flag any that are over the character limit.
+- Do not duplicate the same phrasing across headlines.
+  </div>
+<div class="hitl-box">
+<div class="hitl-label">HITL Gate</div>
+<p>The marketer approved every batch before publishing. Claude generates; you decide what ships.</p>
+</div>
+<h2>Try this yourself</h2>
+<p>You don't need to build a Figma plugin to start. The copy workflow above works in Claude.ai today — paste it into a new conversation, fill in your product details, and you'll have 15 headlines and 4 descriptions ready to paste into Google Ads in under a minute.</p>
+
+</div>
+<div class="page" data-eyebrow="Creative — Case Study 2" data-keywords="6-Slide Carousel in 4 Minutes Creative — Case Study 2 Creative — Case Study 2 6-Slide Carousel in 4 Minutes A solo creative cut their Instagram carousel production time from 40 minutes to under 4 by combining Claude with the Canva connector. Creative ✓ Verified Solo content creator — social-first agency A designer producing weekly Instagram carousels was spending 40 minutes per post designing each slide. Using Claude + Canva connector, the same output now takes under 4 minutes. The key lesson: Canva connector prompts must be more specific than regu" data-title="6-Slide Carousel in 4 Minutes" id="page-c-case2">
+<div class="page-eyebrow creative">Creative — Case Study 2</div>
+<h1 class="page-title">6-Slide Carousel in 4 Minutes</h1>
+<p class="page-intro">A solo creative cut their Instagram carousel production time from 40 minutes to under 4 by combining Claude with the Canva connector.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-creative">Creative</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Solo content creator — social-first agency</span>
+</div>
+<div class="case-body">
+<p>A designer producing weekly Instagram carousels was spending 40 minutes per post designing each slide. Using Claude + Canva connector, the same output now takes under 4 minutes.</p>
+<p>The key lesson: <strong>Canva connector prompts must be more specific than regular Claude prompts.</strong> Canva renders once — it can't course-correct mid-design. If your brief is vague, the output is vague and you can't fix it without starting over.</p>
+</div>
+</div>
+<h2>The prompt that worked</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Canva: Create six Instagram post designs for a carousel.
+
+Slide structure:
+- Slide 1: Title slide — headline "[YOUR HEADLINE]"
+- Slides 2–5: One topic per slide. Each has: a bold topic name as the headline, a two-sentence explanation, and one visual indicator (icon or graphic element)
+- Slide 6: Closing slide with CTA: "[YOUR CTA TEXT]"
+
+Visual direction: [e.g. dark tech-forward aesthetic, clean editorial, warm minimal]
+Colour palette: [YOUR HEX CODES]
+Typography: [FONT PREFERENCES]
+  </div>
+<h2>What this unlocks at 2X</h2>
+<p>The same pattern works for any 2X campaign carousel: weekly thought leadership, event announcements, service spotlights. Set up a Canva Brand Kit with 2X colours and typography first — then every carousel Claude creates via the connector will automatically apply brand styling.</p>
+<div class="callout purple">
+<div class="callout-label">Pro Tip: Discover Your Connector's Capabilities</div>
+<p>Before starting any Canva workflow, run this prompt: <em>"List every Canva connector feature available in this chat, using only the actual exposed tool list as source of truth. Output a bullet point list, with a sample prompt for each feature and the Canva plan required."</em> This tells you exactly what Claude can do before you start — no guessing.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Creative — Case Study 3" data-keywords="Batch Photoshop from a Template + CSV Creative — Case Study 3 Creative — Case Study 3 Batch Photoshop from a Template + CSV An Adobe community developer proved you can feed Claude a Photoshop template and a data file, and have it generate a new PSD for every row — automatically. Creative ✓ Verified Adobe developer experiment — Photoshop MCP workflow Using the community-built adb-mcp tool (which connects Claude to Photoshop via a plugin), a designer demonstrated: one Photoshop template + one CSV file → Claude generates a unique PSD for every row of data. Va" data-title="Batch Photoshop from a Template + CSV" id="page-c-case3">
+<div class="page-eyebrow creative">Creative — Case Study 3</div>
+<h1 class="page-title">Batch Photoshop from a Template + CSV</h1>
+<p class="page-intro">An Adobe community developer proved you can feed Claude a Photoshop template and a data file, and have it generate a new PSD for every row — automatically.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-creative">Creative</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Adobe developer experiment — Photoshop MCP workflow</span>
+</div>
+<div class="case-body">
+<p>Using the community-built <code>adb-mcp</code> tool (which connects Claude to Photoshop via a plugin), a designer demonstrated: one Photoshop template + one CSV file → Claude generates a unique PSD for every row of data. Variable names, product descriptions, prices — all swapped in automatically.</p>
+<p><strong>This is essentially data merge, but controlled by Claude.</strong> You describe what should change per row, and Claude handles the repetition.</p>
+<p>Verdict: proof-of-concept. It worked, but was slow (Claude timed out twice on larger batches). Good for 20–50 assets; less reliable for 500+. The official <strong>Adobe for creativity</strong> connector (launched April 2026) handles lighter versions of this at the Adobe Express level without any setup overhead.</p>
+</div>
+</div>
+<h2>Adobe for creativity connector — what it actually does</h2>
+<p>The official connector (in Claude.ai Settings → Connectors → Adobe for creativity) covers 50+ tools across Photoshop, Lightroom, Illustrator, Firefly, Premiere, Express, InDesign, and Stock. <strong>Important caveat:</strong> independent testing shows it operates at Adobe Express level — not pro-grade Photoshop. A 3-minute video reframe "didn't even centre the subject" in one test.</p>
+<p><strong>Best-fit uses for creative designers:</strong></p>
+<ul>
+<li>Portrait retouching sequences (lighting, background blur, auto-straighten, crop) across Lightroom + Photoshop</li>
+<li>Express social-asset design for quick brand-safe posts</li>
+<li>Horizontal-to-vertical reframe for platform repurposing (rough pass)</li>
+<li>Adobe Stock search and licensing: <em>"Search Adobe Stock for minimalist desk-setup photos and license the top result into my assets"</em></li>
+</ul>
+<div class="callout">
+<div class="callout-label">Realistic Expectation</div>
+<p>The Adobe connector is a capable rough-pass tool, not a precision editing environment. Use it to generate a starting point, then refine in the actual application. Don't demo it to a client as a Photoshop replacement — it isn't one.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Creative — Case Study 4" data-keywords="Brand Guidelines from Existing Assets Creative — Case Study 4 Creative — Case Study 4 Brand Guidelines from Existing Assets A 30-year agency veteran built a client's brand &quot;single source of truth&quot; in 15 minutes — from a website URL, existing decks, and a brand PDF. Creative ✓ Verified Agency principal — nonprofit client rebrand project An agency principal fed Claude Design a nonprofit's existing website URL, two old presentation decks, and a short brand brief PDF. Within 15 minutes, Claude had extracted the colour palette, typography hierarchy, tone princi" data-title="Brand Guidelines from Existing Assets" id="page-c-case4">
+<div class="page-eyebrow creative">Creative — Case Study 4</div>
+<h1 class="page-title">Brand Guidelines from Existing Assets</h1>
+<p class="page-intro">A 30-year agency veteran built a client's brand "single source of truth" in 15 minutes — from a website URL, existing decks, and a brand PDF.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-creative">Creative</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Agency principal — nonprofit client rebrand project</span>
+</div>
+<div class="case-body">
+<p>An agency principal fed Claude Design a nonprofit's existing website URL, two old presentation decks, and a short brand brief PDF. Within 15 minutes, Claude had extracted the colour palette, typography hierarchy, tone principles, and core visual motifs into a structured brand system.</p>
+<p>Caveats: the designer burned through about 90% of their Claude weekly usage allowance in 4–5 prompts (Claude Design uses Opus 4.7, which is expensive for image-heavy tasks). They also noted that for minimal brand inputs (logo + hex code), Claude produces "a reasonable guess, not a real system." The richer your input, the better the output.</p>
+</div>
+</div>
+<h2>The workflow</h2>
+<ol class="step-list">
+<li><span class="step-num" style="background:var(--purple)">1</span><div><strong>Gather inputs first:</strong> the client website URL, any existing deck or PDF, logo files, and a 2–3 sentence brief about their tone and audience.</div></li>
+<li><span class="step-num" style="background:var(--purple)">2</span><div><strong>Open Claude Design</strong> (claude.ai/design — Pro or Max plan required). Upload all inputs.</div></li>
+<li><span class="step-num" style="background:var(--purple)">3</span><div>Prompt: <em>"Extract and systematise the visual identity from these materials. Output: colour palette with hex values, typography hierarchy, tone principles (3–5 rules), and core visual motifs. Format as a brand system reference."</em></div></li>
+<li><span class="step-num" style="background:var(--purple)">4</span><div>Review the output, correct any misinterpretations, then ask Claude to build the guidelines document: <em>"Turn this into a brand guidelines PDF I can share with vendors."</em></div></li>
+</ol>
+<h2>How this works for 2X creative projects</h2>
+<p>For new client onboarding: paste the client's website URL + any existing brand assets into Claude at the start of a project. Ask it to extract the brand system. Use that as your brief foundation — then add your own creative direction on top. This alone can save an hour of manual brand audit work per new client.</p>
+<div class="callout">
+<div class="callout-label">Token Warning</div>
+<p>Claude Design uses vision-heavy processing. If you're on the Pro plan, treat each brand-extraction session as a significant usage event. On Max plan, you get much more room. If you're hitting limits, do the brand extraction in Claude.ai (not Claude Design) with plain text descriptions of the brand — you get 80% of the output at 5% of the token cost.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Creative — Figma Ops" data-keywords="Reducing Repetitive Work in Figma Creative — Figma Ops Creative — Figma Ops Reducing Repetitive Work in Figma Some of the highest-value Claude workflows for creative designers don't involve generating new content at all — they're about eliminating the Figma housekeeping that eats your time. Layer and frame renaming Figma's native AI can rename layers (it's in the right-click menu — &quot;Rename with AI&quot;). But Claude + Figma MCP goes further: you can define your own naming convention and have every layer in a file renamed to match it in one pass. Copy Ren" data-title="Reducing Repetitive Work in Figma" id="page-c-figma">
+<div class="page-eyebrow creative">Creative — Figma Ops</div>
+<h1 class="page-title">Reducing Repetitive Work in Figma</h1>
+<p class="page-intro">Some of the highest-value Claude workflows for creative designers don't involve generating new content at all — they're about eliminating the Figma housekeeping that eats your time.</p>
+<h2>Layer and frame renaming</h2>
+<p>Figma's native AI can rename layers (it's in the right-click menu — "Rename with AI"). But Claude + Figma MCP goes further: you can define your own naming convention and have every layer in a file renamed to match it in one pass.</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Rename all layers in this Figma file according to this convention:
+- Frames: [PageName]/[SectionName]/[ComponentName]
+- Text layers: text/[purpose] e.g. text/headline, text/body, text/cta
+- Image layers: img/[description]
+- Background layers: bg/[colour or description]
+
+Only rename layers that still use Figma's default naming (Frame 1, Rectangle 2, etc.).
+Keep any layers I've already renamed.
+  </div>
+<h2>Text and content insertion for digital ads</h2>
+<p>If you're running digital ad campaigns in Figma, Claude + Figma MCP can insert headline, body copy, and CTA text into all your frames from a brief — so you're not manually pasting text into 12 ad sizes.</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+In this Figma file, I have ad frames for sizes: 300×250, 728×90, 160×600, 320×50.
+
+For each frame, insert this copy:
+Headline: [YOUR HEADLINE — max 40 chars]
+Body: [YOUR BODY COPY — max 90 chars]
+CTA button: [YOUR CTA — max 20 chars]
+
+Place headline in the layer named "text/headline",
+body in "text/body", and CTA in the button layer named "btn/cta".
+  </div>
+<h2>Figma Buzz + Claude (Data Merge)</h2>
+<p>Figma Buzz is a Figma plugin for data merge — feeding spreadsheet data into a Figma template to generate multiple versions. Claude acts as the intelligent layer on top: it writes the content that goes into the spreadsheet, validates it against character limits, and can even suggest which template variations to create.</p>
+<p><strong>Workflow:</strong></p>
+<ol>
+<li>Set up your Figma template with named text layers (matching your Buzz column names)</li>
+<li>Ask Claude to generate the data file: <em>"I have a Figma Buzz template with columns: Name, JobTitle, Company, Headline. Generate 20 rows for [CAMPAIGN/EVENT NAME], keeping Headline under 60 characters."</em></li>
+<li>Export Claude's output as CSV → import into Figma Buzz → generate all variants</li>
+</ol>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: Figma Buzz + Claude workflow diagram</div>
+<div class="img-desc">Simple flow diagram: Claude → CSV data → Figma Buzz → multiple ad variants in Figma. Dark background, 2X brand styling.</div>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Creative — Prompt Library" data-keywords="Creative Prompt Library Creative — Prompt Library Creative — Prompt Library Creative Prompt Library Copy-paste prompts for the most common creative design tasks. Replace bracketed values with your own details. Brief builder Copy Turn these rough notes into a structured creative brief:
+
+[PASTE YOUR NOTES, EMAILS, OR VOICE MEMO TRANSCRIPT HERE]
+
+Output format:
+- Project summary (1 sentence)
+- Audience (who, what they care about)
+- Key message (what we want them to feel/do)
+- Deliverables (list)
+- Tone (3 adjectives)
+- References (ask me if you ne" data-title="Creative Prompt Library" id="page-c-prompts">
+<div class="page-eyebrow creative">Creative — Prompt Library</div>
+<h1 class="page-title">Creative Prompt Library</h1>
+<p class="page-intro">Copy-paste prompts for the most common creative design tasks. Replace bracketed values with your own details.</p>
+<h3>Brief builder</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>Turn these rough notes into a structured creative brief:
+
+[PASTE YOUR NOTES, EMAILS, OR VOICE MEMO TRANSCRIPT HERE]
+
+Output format:
+- Project summary (1 sentence)
+- Audience (who, what they care about)
+- Key message (what we want them to feel/do)
+- Deliverables (list)
+- Tone (3 adjectives)
+- References (ask me if you need these)
+- Constraints (platform specs, character limits, etc.)</div>
+<h3>Ad copy validator</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>Review these ad headlines for: (1) character limit compliance — max 30 chars each, (2) brand tone — [YOUR TONE], (3) avoid these words: [LIST].
+
+Flag any that fail, suggest fixes.
+
+Headlines:
+[PASTE YOUR HEADLINES, ONE PER LINE]</div>
+<h3>Social caption generator</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>Write 5 LinkedIn caption options for this post.
+
+Topic: [TOPIC]
+Audience: [WHO]
+Tone: [TONE — e.g. "thought leadership, no buzzwords, short sentences"]
+Post format: opens with a hook, 3–5 short paragraphs, ends with a question or CTA
+Character limit: under 1300 characters per option
+Do not use emojis.</div>
+<h3>Brand voice checker</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>Review this copy against [BRAND NAME]'s voice: [DESCRIBE YOUR BRAND VOICE — e.g. "direct, expert, no jargon, empathetic"].
+
+Flag: phrases that sound off-brand, any jargon to remove, sentences to tighten.
+
+Copy to review:
+[PASTE YOUR COPY]</div>
+
+</div>
+<div class="page" data-eyebrow="Creative — Tools" data-keywords="Creative Tool Stack Creative — Tools Creative — Tools Creative Tool Stack What to connect, in what order. Each tool listed with what it costs and what it does for a creative designer. Tool What it does for creatives Cost Setup Claude Desktop Briefs, copy, compliance review, brand extraction, campaign ideation Paid sub Download from claude.ai Canva Connector Social assets, carousels, branded templates via prompt Free to connect Settings → Connectors Adobe for creativity Rough-pass Photoshop, Stock licensing, Express assets Requires " data-title="Creative Tool Stack" id="page-c-tools">
+<div class="page-eyebrow creative">Creative — Tools</div>
+<h1 class="page-title">Creative Tool Stack</h1>
+<p class="page-intro">What to connect, in what order. Each tool listed with what it costs and what it does for a creative designer.</p>
+<table class="comparison-table">
+<thead><tr><th>Tool</th><th>What it does for creatives</th><th>Cost</th><th>Setup</th></tr></thead>
+<tbody>
+<tr><td><strong>Claude Desktop</strong></td><td>Briefs, copy, compliance review, brand extraction, campaign ideation</td><td class="tag tag-paid">Paid sub</td><td>Download from claude.ai</td></tr>
+<tr><td><strong>Canva Connector</strong></td><td>Social assets, carousels, branded templates via prompt</td><td class="tag tag-free">Free to connect</td><td>Settings → Connectors</td></tr>
+<tr><td><strong>Adobe for creativity</strong></td><td>Rough-pass Photoshop, Stock licensing, Express assets</td><td class="tag tag-paid">Requires CC sub</td><td>Settings → Connectors</td></tr>
+<tr><td><strong>Google Drive</strong></td><td>Brief intake, file sharing, export</td><td class="tag tag-free">Free</td><td>Settings → Connectors</td></tr>
+<tr><td><strong>Figma MCP</strong></td><td>Layer naming, text insertion, ad frame population, data merge</td><td class="tag tag-free">Free (beta)</td><td>One command or Connector</td></tr>
+<tr><td><strong>n8n</strong></td><td>Scheduled batch copy generation, approval loops, Sheet export</td><td class="tag tag-free">Free (self-hosted)</td><td>See n8n section</td></tr>
+<tr><td><strong>Leonardo.ai</strong></td><td>Reference imagery, concept visuals — has official MCP</td><td class="tag tag-free">Free tier / paid</td><td>API key + MCP install</td></tr>
+<tr><td><strong>Ideogram</strong></td><td>Text-in-image creative, ~$0.06/image via API</td><td class="tag tag-paid">Pay per use</td><td>API key</td></tr>
+</tbody>
+</table>
+
+</div>
+<div class="page" data-eyebrow="Pillar 2 — UI/UX Designer" data-keywords="Claude for UI/UX Designers Pillar 2 — UI/UX Designer Pillar 2 — UI/UX Designer Claude for UI/UX Designers The deepest, most technically documented pillar. Claude's highest-verified ROI for UI/UX is in the systems layer — writing design tokens, enforcing component standards, accessibility audits, and accelerating handoff to engineering. What this pillar covers Writing full design language systems directly into Figma variables Building 100+ component variants in minutes rather than hours Enforcing design system rules so Claude never hardcodes a valu" data-title="Claude for UI/UX Designers" id="page-u-intro">
+<div class="page-eyebrow uiux">Pillar 2 — UI/UX Designer</div>
+<h1 class="page-title">Claude for UI/UX Designers</h1>
+<p class="page-intro">The deepest, most technically documented pillar. Claude's highest-verified ROI for UI/UX is in the systems layer — writing design tokens, enforcing component standards, accessibility audits, and accelerating handoff to engineering.</p>
+<h2>What this pillar covers</h2>
+<ul>
+<li>Writing full design language systems directly into Figma variables</li>
+<li>Building 100+ component variants in minutes rather than hours</li>
+<li>Enforcing design system rules so Claude never hardcodes a value</li>
+<li>Wireframe-to-production prototype workflows</li>
+<li>Design system health audits with automated token binding</li>
+<li>Enterprise-scale component library extraction from codebases</li>
+<li>Automated variable naming and design system documentation</li>
+</ul>
+<div class="callout blue">
+<div class="callout-label">The UIUX Designer's Mental Model</div>
+<p>Claude's greatest power for UIUX is that it treats design and code as the same thing. A design token is a variable in Figma AND a CSS variable in code — Claude writes both simultaneously. This collapses the most time-consuming part of design-systems work: the manual translation between design and engineering.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Case Study 1" data-keywords="A Full Design Language System in One Session UI/UX — Case Study 1 UI/UX — Case Study 1 A Full Design Language System in One Session A UIUX designer wrote an entire design language system — colours, spacing, typography, semantic tokens — directly into Figma variables using one prompt. UI/UX ✓ Verified Native iOS app — design language system build A UIUX designer needed a complete design language system for a native iOS grocery app. Instead of spending half a day manually creating variables in Figma, they gave Claude the brand specifications in one structured pr" data-title="A Full Design Language System in One Session" id="page-u-case1">
+<div class="page-eyebrow uiux">UI/UX — Case Study 1</div>
+<h1 class="page-title">A Full Design Language System in One Session</h1>
+<p class="page-intro">A UIUX designer wrote an entire design language system — colours, spacing, typography, semantic tokens — directly into Figma variables using one prompt.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-uiux">UI/UX</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Native iOS app — design language system build</span>
+</div>
+<div class="case-body">
+<p>A UIUX designer needed a complete design language system for a native iOS grocery app. Instead of spending half a day manually creating variables in Figma, they gave Claude the brand specifications in one structured prompt. Claude wrote the entire token system directly into the Figma variables panel.</p>
+</div>
+</div>
+<h2>The exact prompt used</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Create a design language system for [APP NAME] — a native iOS [APP TYPE] app.
+
+Primary brand colour: [HEX] ([NAME — e.g. golden yellow])
+Secondary: [HEX] ([NAME])
+Accent: [HEX] ([NAME])
+Typeface: [FONT NAME — e.g. SF Pro Text]
+Base spacing unit: 4px, scaling up to 32px
+Border radius: [RANGE — e.g. 4px to full pill shapes for chat bubbles and tags]
+Semantic colours:
+  success: [HEX]
+  warning: [HEX]
+  danger: [HEX]
+
+Tone: [3 adjectives]
+
+Write all tokens into the open Figma file.
+  </div>
+<h2>What you'll need first</h2>
+<ul>
+<li>Claude Code (not Claude.ai) — this is a terminal-based tool. Download from claude.ai/code.</li>
+<li>Figma MCP connected (see the Figma MCP section)</li>
+<li>A Figma Professional seat for write access</li>
+<li>Your Figma file open in the Figma Desktop app — not the browser version</li>
+</ul>
+<div class="callout blue">
+<div class="callout-label">The Result</div>
+<p>Work that would take a design-systems engineer half a day was done in one session. The token system was bound — not just a flat list of colours, but primitive tokens referenced by semantic tokens, ready to attach to components.</p>
+</div>
+<h2>Apply to 2X projects</h2>
+<p>For any new 2X client project, start every design system engagement with this workflow. Feed Claude the client's brand spec, have it generate the token architecture, then refine. The human's role is art direction and approval — not manual variable entry.</p>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Case Study 2" data-keywords="120 Button Variants in 45 Minutes UI/UX — Case Study 2 UI/UX — Case Study 2 120 Button Variants in 45 Minutes A product designer built a complete button component with 120 variants — in 45 minutes. The same task manually takes 3+ hours. UI/UX ✓ Verified B2B SaaS product — button component build Using Claude Code in Agentic mode connected to the Figma MCP, a designer described the full button specification in one structured prompt. Claude built all 120 variants — covering 4 types, 3 sizes, 4 states, and 5 layout options — directly in Figma. 45min tot" data-title="120 Button Variants in 45 Minutes" id="page-u-case2">
+<div class="page-eyebrow uiux">UI/UX — Case Study 2</div>
+<h1 class="page-title">120 Button Variants in 45 Minutes</h1>
+<p class="page-intro">A product designer built a complete button component with 120 variants — in 45 minutes. The same task manually takes 3+ hours.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-uiux">UI/UX</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">B2B SaaS product — button component build</span>
+</div>
+<div class="case-body">
+<p>Using Claude Code in Agentic mode connected to the Figma MCP, a designer described the full button specification in one structured prompt. Claude built all 120 variants — covering 4 types, 3 sizes, 4 states, and 5 layout options — directly in Figma.</p>
+</div>
+</div>
+<div class="case-metrics">
+<div class="metric-box"><div class="metric-value">45min</div><div class="metric-label">total build time</div></div>
+<div class="metric-box"><div class="metric-value">120</div><div class="metric-label">variants created</div></div>
+<div class="metric-box"><div class="metric-value">3hrs+</div><div class="metric-label">manual equivalent</div></div>
+</div>
+<h2>The exact prompt used</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Create a button component in my Figma file with the following specifications:
+
+Variants:
+— Type: Primary, Secondary, Tertiary, Danger
+— Size: Small (32px height), Medium (40px height), Large (48px height)
+— State: Default, Hover, Active, Disabled
+— Layout: Label only, Label + Leading icon, Label + Trailing icon, Icon only, Label + Leading + Trailing icon
+
+Use the design tokens already in this file.
+Do not hardcode any colour values — reference token names only.
+  </div>
+<h2>The token architecture prompt (run this first)</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+In my Figma file, create a complete design token system:
+- Primitive colours (the raw hex values, named by hue and shade)
+- Semantic tokens that reference primitives (e.g. color/brand/primary → primitives/red/500)
+- Typography: map each text style to a named text-style in Figma
+- Spacing: 4px base unit, scale to 32px with named tokens
+- Border radius: named tokens for each radius value
+
+All semantic tokens must alias to primitives.
+Do not create any hardcoded values.
+  </div>
+<div class="hitl-box">
+<div class="hitl-label">HITL Gate</div>
+<p>After Claude builds the component, review it in Figma before using it in production. Check that all tokens are properly bound (no hardcoded hex values), and that the variants behave correctly in auto-layout. Claude will get this right most of the time — but "most of the time" is not "always."</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Case Study 3" data-keywords="Stopping Claude from Breaking Your Design System UI/UX — Case Study 3 UI/UX — Case Study 3 Stopping Claude from Breaking Your Design System The most common frustration with Claude + Figma: it writes a hardcoded colour (#5C6AC4) instead of a token reference (color/brand/primary). A UIUX designer built a four-step harness that fixes this permanently. UI/UX ✓ Verified Design systems practitioner — token enforcement workflow The problem: Claude would produce visually correct output (the right colour) but structurally wrong output (a hardcoded hex value instead of a to" data-title="Stopping Claude from Breaking Your Design System" id="page-u-case3">
+<div class="page-eyebrow uiux">UI/UX — Case Study 3</div>
+<h1 class="page-title">Stopping Claude from Breaking Your Design System</h1>
+<p class="page-intro">The most common frustration with Claude + Figma: it writes a hardcoded colour (#5C6AC4) instead of a token reference (color/brand/primary). A UIUX designer built a four-step harness that fixes this permanently.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-uiux">UI/UX</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Design systems practitioner — token enforcement workflow</span>
+</div>
+<div class="case-body">
+<p>The problem: Claude would produce visually correct output (the right colour) but structurally wrong output (a hardcoded hex value instead of a token reference). This passes visual QA but breaks the design system — developers consume the tokens, not the hex values.</p>
+<p>The solution: a four-step Skill harness that forces Claude to check its work before and after each operation.</p>
+</div>
+</div>
+<h2>The four-skill harness</h2>
+<ol class="step-list">
+<li><span class="step-num blue">1</span><div><strong>Preflight Skill</strong> — before Claude creates any node, it must output a Token Map (every token name and its value) and a Component Registry (every component in the file). Claude cannot proceed until this passes.</div></li>
+<li><span class="step-num blue">2</span><div><strong>Design Brief Parser</strong> — structures the incoming request against the registered tokens. Any colour, spacing, or radius reference in the brief is mapped to a token name before any Figma operation begins.</div></li>
+<li><span class="step-num blue">3</span><div><strong>Write to Figma</strong> — executes with token references enforced. Claude uses token names (color/brand/primary) not hex values.</div></li>
+<li><span class="step-num blue">4</span><div><strong>QA + Rebinding Skill</strong> — audits the output. Finds any hardcoded values and triggers a rebinding pass to replace them with the correct token references.</div></li>
+</ol>
+<h2>A simpler version for beginners</h2>
+<p>If you're not ready to build a full Skill harness, add this line to every Figma prompt:</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Important: do not hardcode any colour, spacing, or border radius values.
+Every value must reference a named token from the variables panel.
+If a token doesn't exist for the value you need, ask me before proceeding.
+  </div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Case Study 4" data-keywords="Wireframe → Production → Storybook UI/UX — Case Study 4 UI/UX — Case Study 4 Wireframe → Production → Storybook A lead product designer used Claude as a two-role engineer: builder and reviewer. The result was a production-ready prototype with live browser verification in one session. UI/UX ✓ Verified Lead Product Designer — end-to-end build workflow Using Claude Code as builder, a second AI model as reviewer, Figma MCP for design context, and Playwright MCP for browser verification, a Lead Product Designer moved from a Figma wireframe to a production" data-title="Wireframe → Production → Storybook" id="page-u-case4">
+<div class="page-eyebrow uiux">UI/UX — Case Study 4</div>
+<h1 class="page-title">Wireframe → Production → Storybook</h1>
+<p class="page-intro">A lead product designer used Claude as a two-role engineer: builder and reviewer. The result was a production-ready prototype with live browser verification in one session.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-uiux">UI/UX</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Lead Product Designer — end-to-end build workflow</span>
+</div>
+<div class="case-body">
+<p>Using Claude Code as builder, a second AI model as reviewer, Figma MCP for design context, and Playwright MCP for browser verification, a Lead Product Designer moved from a Figma wireframe to a production-coded prototype with Storybook documentation in a single extended session.</p>
+<p>The Playwright MCP was the key addition: it let Claude open a browser, look at its own rendered output, spot misalignments between the wireframe and the live page, and self-correct — without the designer needing to manually QA each iteration.</p>
+</div>
+</div>
+<h2>The prompt structure</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Implement the wireframe shown in this Figma file as a new page.
+
+Requirements:
+- Only use design tokens and components already in this file
+- Capitalise all button labels
+- Maintain clear visual hierarchy — headlines, subheadings, body, captions
+- Fully responsive (mobile, tablet, desktop breakpoints)
+- After building, open a browser, check your output against the wireframe,
+  and fix any misalignments you find
+
+Act as both a Senior Designer and a Senior Front-End Engineer for this task.
+Report what you changed and why.
+  </div>
+<div class="callout blue">
+<div class="callout-label">This is the Advanced Tier</div>
+<p>This workflow requires: Claude Code, Figma MCP, Playwright MCP, and a clean codebase with Code Connect set up. If you're just starting, master the token and component workflows first. Come back to this one after a few weeks of Claude Code experience.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Case Study 5" data-keywords="Enterprise Component Libraries UI/UX — Case Study 5 UI/UX — Case Study 5 Enterprise Component Libraries Three enterprise product teams shared what Claude Design did with their actual codebases. UI/UX ✓ Vendor-confirmed Enterprise product teams — three separate companies An edtech company's senior product designer: &quot;Our most complex pages, which took 20+ prompts to recreate in other tools, only required 2 prompts in Claude Design.&quot; A monitoring/observability SaaS company: compressed a &quot;week-long cycle of briefs, mockups, and review rounds into a s" data-title="Enterprise Component Libraries" id="page-u-case5">
+<div class="page-eyebrow uiux">UI/UX — Case Study 5</div>
+<h1 class="page-title">Enterprise Component Libraries</h1>
+<p class="page-intro">Three enterprise product teams shared what Claude Design did with their actual codebases.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-uiux">UI/UX</span>
+<span class="case-badge badge-verified">✓ Vendor-confirmed</span>
+<span class="case-title">Enterprise product teams — three separate companies</span>
+</div>
+<div class="case-body">
+<ul>
+<li>An edtech company's senior product designer: <em>"Our most complex pages, which took 20+ prompts to recreate in other tools, only required 2 prompts in Claude Design."</em></li>
+<li>A monitoring/observability SaaS company: compressed a "week-long cycle of briefs, mockups, and review rounds into a single conversation."</li>
+<li>A fintech company: had 90% of its component library inferred from its codebase in 10 minutes. Prerequisite: a clean, well-structured codebase with consistent token usage.</li>
+</ul>
+</div>
+</div>
+<div class="callout">
+<div class="callout-label">The Prerequisite</div>
+<p>The 90%-in-10-minutes result assumes a clean codebase. If your code has inconsistent naming, mixed token usage, or legacy styles, Claude will infer a messy system. The rule: garbage in, garbage out — but also, organised in, spectacular out.</p>
+</div>
+<h2>Variables naming automation</h2>
+<p>One of the highest-value, lowest-effort UIUX workflows: paste your existing design system's token list into Claude and ask it to audit and rename everything to a consistent convention.</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Audit the variables in this Figma file and rename them to follow this convention:
+- Format: [category]/[subcategory]/[name]
+- Categories: color, spacing, radius, typography, shadow
+- Colours: distinguish primitive (color/primitive/red/500) from semantic (color/semantic/brand/primary)
+- All semantic tokens must alias to a primitive — flag any that don't
+
+Output: a table of old name → new name for every variable that needs changing.
+Ask me to approve before making any changes in Figma.
+  </div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Claude Design" data-keywords="Claude Design for UI/UX UI/UX — Claude Design UI/UX — Claude Design Claude Design for UI/UX Claude Design is Anthropic's prompt-to-prototype tool. It's fast for upstream exploration and struggling for sustained high-fidelity work. Here's when to use it — and when not to. What Claude Design does You describe what you want, Claude generates a working prototype (HTML/CSS/JS) that you can see in a browser. It can also read your codebase or Figma file to extract your design system, then generate designs that use your actual tokens and components" data-title="Claude Design for UI/UX" id="page-u-claude-design">
+<div class="page-eyebrow uiux">UI/UX — Claude Design</div>
+<h1 class="page-title">Claude Design for UI/UX</h1>
+<p class="page-intro">Claude Design is Anthropic's prompt-to-prototype tool. It's fast for upstream exploration and struggling for sustained high-fidelity work. Here's when to use it — and when not to.</p>
+<h2>What Claude Design does</h2>
+<p>You describe what you want, Claude generates a working prototype (HTML/CSS/JS) that you can see in a browser. It can also read your codebase or Figma file to extract your design system, then generate designs that use your actual tokens and components. When you're happy with a direction, it hands off to Claude Code for production.</p>
+<h2>Use it for</h2>
+<ul>
+<li>Rapid direction exploration — get 3 directions in 15 minutes, then choose one</li>
+<li>Quick stakeholder mockups before committing to Figma</li>
+<li>Extracting a design system from a clean codebase</li>
+<li>WCAG accessibility self-audits: <em>"Review this design for WCAG 2.1 AA contrast and accessibility violations with specific fixes."</em></li>
+<li>Turning a rough PRD or spec into a visual wireframe for stakeholder review</li>
+</ul>
+<h2>Avoid it for</h2>
+<ul>
+<li>Sustained high-fidelity design work — Figma is better for that</li>
+<li>Any task where you're on Pro plan and have limited usage — Claude Design burns tokens fast</li>
+<li>Design systems built from minimal brand input (logo + hex code = "reasonable guess")</li>
+</ul>
+<div class="callout">
+<div class="callout-label">⚠️ Token Warning</div>
+<p>Claude Design uses Opus 4.7, which charges roughly 3× more per image token. Multiple users on the Pro plan burned through their entire weekly allowance in one 30-minute session. If you're on Pro, treat each Claude Design session as a significant event. On Max plan, you have much more room.</p>
+</div>
+<h2>The three-direction exploration prompt</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Show me 3 different directions for [COMPONENT/PAGE NAME].
+
+Direction 1: Minimal — clean, lots of white space, typography-led
+Direction 2: Expressive — bold visuals, stronger colour use, more personality  
+Direction 3: [YOUR CUSTOM DIRECTION — e.g. retro-technical, editorial, data-dense]
+
+Use [YOUR BRAND SYSTEM] tokens throughout.
+Do not repeat the same layout across directions.
+  </div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Prompt Library" data-keywords="UI/UX Prompt Library UI/UX — Prompt Library UI/UX — Prompt Library UI/UX Prompt Library Design system audit Copy Audit my Figma design system and report:
+1. Any colours that are hardcoded (not referencing a token)
+2. Any spacing values that are not on the 4px grid
+3. Components that have missing states (e.g. a button without a disabled state)
+4. Text styles that are not using named styles
+5. Variables that are not aliased to primitives
+
+Provide a prioritised fix list. Ask me before making any changes. Accessibility audit Copy Review this " data-title="UI/UX Prompt Library" id="page-u-prompts">
+<div class="page-eyebrow uiux">UI/UX — Prompt Library</div>
+<h1 class="page-title">UI/UX Prompt Library</h1>
+<h3>Design system audit</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Audit my Figma design system and report:
+1. Any colours that are hardcoded (not referencing a token)
+2. Any spacing values that are not on the 4px grid
+3. Components that have missing states (e.g. a button without a disabled state)
+4. Text styles that are not using named styles
+5. Variables that are not aliased to primitives
+
+Provide a prioritised fix list. Ask me before making any changes.
+  </div>
+<h3>Accessibility audit</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Review this design for WCAG 2.1 AA compliance. Check:
+- Colour contrast ratios (minimum 4.5:1 for text, 3:1 for large text and UI)
+- Interactive element sizes (minimum 44×44px touch target)
+- Focus states on all interactive elements
+- Alt text requirements for images
+- Heading hierarchy
+
+For each issue: describe the problem, the WCAG criterion it violates, and the specific fix.
+  </div>
+<h3>Handoff documentation</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Fetch this Figma design file, read the README, and generate developer handoff documentation.
+
+Include:
+- Layout specifications (spacing, alignment, breakpoints)
+- Component list with props and states
+- Token references (not hex values — token names)
+- Interaction notes (hover states, transitions, animations)
+- Edge cases and empty states to implement
+- Any accessibility requirements
+
+Format as a markdown document engineers can paste into Notion or Confluence.
+  </div>
+<h3>UX critique</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Review this design from a UX perspective.
+
+Evaluate:
+- Information hierarchy — is the most important thing visually dominant?
+- Friction points — where might a user get stuck or confused?
+- Missing states — what happens when the list is empty? When loading? On error?
+- Cognitive load — is there too much on screen at once?
+
+Give specific, actionable feedback. Describe what you'd change and why.
+Do not tell me it "looks great." Tell me what to fix.
+  </div>
+
+</div>
+<div class="page" data-eyebrow="UI/UX — Tools" data-keywords="UI/UX Tool Stack UI/UX — Tools UI/UX — Tools UI/UX Tool Stack Tool What it does for UIUX Cost Priority Claude Desktop Ideation, IA, flows, research synthesis, critique Paid sub Start here Claude Code Token systems, component building, handoff, implementation Included Core tool Figma MCP (Official) Read/write tokens, components, variables Free (beta) Essential Figma Console MCP Bulk token ops, health scoring, real-time awareness Free (MIT) For DS work Claude Design Rapid prototype exploration, system extraction Uses allowance " data-title="UI/UX Tool Stack" id="page-u-tools">
+<div class="page-eyebrow uiux">UI/UX — Tools</div>
+<h1 class="page-title">UI/UX Tool Stack</h1>
+<table class="comparison-table">
+<thead><tr><th>Tool</th><th>What it does for UIUX</th><th>Cost</th><th>Priority</th></tr></thead>
+<tbody>
+<tr><td><strong>Claude Desktop</strong></td><td>Ideation, IA, flows, research synthesis, critique</td><td class="tag tag-paid">Paid sub</td><td>Start here</td></tr>
+<tr><td><strong>Claude Code</strong></td><td>Token systems, component building, handoff, implementation</td><td class="tag tag-paid">Included</td><td>Core tool</td></tr>
+<tr><td><strong>Figma MCP (Official)</strong></td><td>Read/write tokens, components, variables</td><td class="tag tag-free">Free (beta)</td><td>Essential</td></tr>
+<tr><td><strong>Figma Console MCP</strong></td><td>Bulk token ops, health scoring, real-time awareness</td><td class="tag tag-free">Free (MIT)</td><td>For DS work</td></tr>
+<tr><td><strong>Claude Design</strong></td><td>Rapid prototype exploration, system extraction</td><td class="tag tag-paid">Uses allowance fast</td><td>Upstream only</td></tr>
+<tr><td><strong>Playwright MCP</strong></td><td>Browser-based visual verification, self-correction</td><td class="tag tag-free">Free</td><td>Advanced tier</td></tr>
+<tr><td><strong>Framer</strong></td><td>Prototyping with Claude MCP plugin</td><td class="tag tag-paid">Paid</td><td>Optional</td></tr>
+</tbody>
+</table>
+
+</div>
+<div class="page" data-eyebrow="Pillar 3 — Video Designer" data-keywords="Claude for Video Designers Pillar 3 — Video Designer Pillar 3 — Video Designer Claude for Video Designers The newest pillar. The tools are real, the time savings are verified — but this is genuinely experimental territory. Think of this as the map for a trail that's just been opened. The path is there; some sections are smoother than others. Where the Evidence is Strong Scripting, storyboarding, repurposing strategy, and packaging (titles, descriptions, thumbnails) — these are the most documented and reliable Claude workflows for video. The editin" data-title="Claude for Video Designers" id="page-v-intro">
+<div class="page-eyebrow video">Pillar 3 — Video Designer</div>
+<h1 class="page-title">Claude for Video Designers</h1>
+<p class="page-intro">The newest pillar. The tools are real, the time savings are verified — but this is genuinely experimental territory. Think of this as the map for a trail that's just been opened. The path is there; some sections are smoother than others.</p>
+<div class="callout teal">
+<div class="callout-label">Where the Evidence is Strong</div>
+<p>Scripting, storyboarding, repurposing strategy, and packaging (titles, descriptions, thumbnails) — these are the most documented and reliable Claude workflows for video. The editing tool integrations are real and documented at the capability level, but community case studies with published results are still emerging.</p>
+</div>
+<h2>What this pillar covers</h2>
+<ul>
+<li>Long-form to short-form repurposing strategy and content matrices</li>
+<li>Descript + Claude for AI-powered editing and transcription workflows</li>
+<li>Agentic editing with Jumper MCP across Premiere, Resolve, FCP, and Avid</li>
+<li>AI video generation with Higgsfield, Luma, and Runway</li>
+<li>Adobe connectors for video (Premiere reframe, motion ops)</li>
+<li>After Effects and Hyperframes for motion graphics via Claude Code</li>
+<li>ElevenLabs for voiceover generation</li>
+<li>n8n automation for publish and delivery ops</li>
+</ul>
+
+</div>
+<div class="page" data-eyebrow="Video — Case Study 1" data-keywords="100+ Hours Saved on Scripting Video — Case Study 1 Video — Case Study 1 100+ Hours Saved on Scripting The most reliably documented Claude workflow for video designers: scripting, storyboarding, and repurposing. Works today in Claude.ai with no additional tools. Video ✓ Verified Influencer marketing team — content scripting at scale A team managing influencer partnerships reported freeing over 100 hours per month by using Claude for scripting, research synthesis, and content planning. The work Claude absorbed: first-draft scripts, briefing notes " data-title="100+ Hours Saved on Scripting" id="page-v-case1">
+<div class="page-eyebrow video">Video — Case Study 1</div>
+<h1 class="page-title">100+ Hours Saved on Scripting</h1>
+<p class="page-intro">The most reliably documented Claude workflow for video designers: scripting, storyboarding, and repurposing. Works today in Claude.ai with no additional tools.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-video">Video</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Influencer marketing team — content scripting at scale</span>
+</div>
+<div class="case-body">
+<p>A team managing influencer partnerships reported freeing over 100 hours per month by using Claude for scripting, research synthesis, and content planning. The work Claude absorbed: first-draft scripts, briefing notes for talent, repurposing matrices for long-form content, and platform-specific packaging (titles, descriptions, captions).</p>
+</div>
+</div>
+<h2>The repurposing matrix workflow</h2>
+<p>Paste any transcript or episode notes into Claude and ask it to generate a complete repurposing plan:</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Structure this transcript into a YouTube-ready video.
+
+1. Identify the strongest hook — the opening 30 seconds. Write it out.
+2. Chapter the content with suggested timestamps and chapter titles.
+3. Flag the 3 moments most likely to drive engagement (emotional, surprising, or highly quotable).
+4. Write a 120-word YouTube description optimised for search.
+5. Suggest 5 title options (A/B test candidates).
+6. List 5 short-form clip ideas (each under 60 seconds) with their timestamps.
+
+[PASTE TRANSCRIPT HERE]
+  </div>
+<h2>The packaging QA prompt</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Review these YouTube packaging options:
+
+Titles: [PASTE YOUR TITLE OPTIONS]
+Thumbnails: [DESCRIBE OR UPLOAD YOUR THUMBNAIL OPTIONS]
+Description: [PASTE YOUR DESCRIPTION]
+
+Check for:
+- Does the title create curiosity without being misleading?
+- Is the thumbnail readable at 80px (thumbnail preview size)?
+- Does the description include the target keyword in the first 2 lines?
+- Any over-promises or clickbait to remove?
+  </div>
+
+</div>
+<div class="page" data-eyebrow="Video — Case Study 2" data-keywords="Descript + Claude — AI Editing from Claude Video — Case Study 2 Video — Case Study 2 Descript + Claude — AI Editing from Claude Descript launched an official MCP in May 2026. It gives Claude direct access to your Descript projects, the Underlord AI editor, and the full publishing workflow. Video ✓ Verified Content teams — Descript + Claude integration (May 2026) Descript's official MCP server launched in early May 2026 at api.descript.com/v2/mcp . Once connected, Claude can: import media files, run Underlord AI edits (filler removal, Studio Sound cleanup, ca" data-title="Descript + Claude — AI Editing from Claude" id="page-v-case2">
+<div class="page-eyebrow video">Video — Case Study 2</div>
+<h1 class="page-title">Descript + Claude — AI Editing from Claude</h1>
+<p class="page-intro">Descript launched an official MCP in May 2026. It gives Claude direct access to your Descript projects, the Underlord AI editor, and the full publishing workflow.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-video">Video</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Content teams — Descript + Claude integration (May 2026)</span>
+</div>
+<div class="case-body">
+<p>Descript's official MCP server launched in early May 2026 at <code>api.descript.com/v2/mcp</code>. Once connected, Claude can: import media files, run Underlord AI edits (filler removal, Studio Sound cleanup, captioning, B-roll suggestions), create and manage compositions, target specific project folders, export to web share links, and track task progress in real time.</p>
+<p>A Zapier demo (from Descript's official API Office Hours) showed the batch-use case: trigger on new files arriving in Google Drive → import into Descript → run Claude-prompted edits (Studio Sound, music, orientation) → deliver a polished cut. Their example: captioning and clipping 180 short reels in one automated run.</p>
+</div>
+</div>
+<h2>How to connect Descript MCP</h2>
+<ol class="step-list">
+<li><span class="step-num teal">1</span><div>In Claude Desktop: Settings → Developer → Edit Config</div></li>
+<li><span class="step-num teal">2</span><div>Add this server entry, save, and restart Claude Desktop:</div></li>
+</ol>
+<div class="prompt-block" style="color:#f8c291">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+{
+  "mcpServers": {
+    "descript": {
+      "type": "http",
+      "url": "https://api.descript.com/v2/mcp/claude"
+    }
+  }
+}
+  </div>
+<ol class="step-list" start="3">
+<li><span class="step-num teal">3</span><div>Authenticate with your Descript account via the OAuth prompt.</div></li>
+</ol>
+<h2>Prompts to try</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Import [FILE URL] into a new Descript project called "[PROJECT NAME]".
+Apply Studio Sound cleanup to remove background noise.
+Remove all filler words (um, uh, like, you know).
+Generate captions.
+Add a music bed at 15% volume.
+Export a web share link when done.
+  </div>
+<div class="callout teal">
+<div class="callout-label">n8n Batch Version</div>
+<p>For batch repurposing: set up an n8n workflow that watches a Google Drive folder for new recordings → triggers Descript import → runs the Claude edit prompts → delivers share links to Slack. Ask the n8n section for the workflow template.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Video — Case Study 3" data-keywords="Agentic Editing with Jumper Video — Case Study 3 Video — Case Study 3 Agentic Editing with Jumper Jumper lets Claude search your footage — by what's visible, by who's speaking, and by what's being said — and assemble a timeline, all from a natural language prompt. Video ✓ Capability verified Jumper MCP — agentic editing across NLEs (2026) Jumper (getjumper.io) is an MCP that integrates with Premiere Pro, DaVinci Resolve, Final Cut Pro, and Avid. Claude can search footage by visual content, transcript keywords, or speaker identity — then export" data-title="Agentic Editing with Jumper" id="page-v-case3">
+<div class="page-eyebrow video">Video — Case Study 3</div>
+<h1 class="page-title">Agentic Editing with Jumper</h1>
+<p class="page-intro">Jumper lets Claude search your footage — by what's visible, by who's speaking, and by what's being said — and assemble a timeline, all from a natural language prompt.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-video">Video</span>
+<span class="case-badge badge-verified">✓ Capability verified</span>
+<span class="case-title">Jumper MCP — agentic editing across NLEs (2026)</span>
+</div>
+<div class="case-body">
+<p>Jumper (getjumper.io) is an MCP that integrates with Premiere Pro, DaVinci Resolve, Final Cut Pro, and Avid. Claude can search footage by visual content, transcript keywords, or speaker identity — then export results as individual files or assemble them into a timeline sequence.</p>
+<p><strong>Status:</strong> the technology is real and documented by Jumper at the capability level. Independent community case studies with published results are still emerging — treat this as an experiment-ready workflow, not a proven production pipeline.</p>
+</div>
+</div>
+<h2>Prompts that have been demonstrated</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Use Jumper to find all shots of [SUBJECT] smiling.
+Export them as individual files.
+Also export a sequence to Premiere.
+  </div>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Use Jumper to cut a sizzle reel from the event footage in [FOLDER PATH].
+The voiceover file is at [AUDIO FILE PATH].
+Target duration: 90 seconds.
+Lead with the most energetic crowd moment.
+  </div>
+<h2>Also: Premiere Pro MCP servers</h2>
+<p>Several community-built MCP servers expose deep Premiere Pro control to Claude. The most capable has 269 tools covering: timeline assembly, transitions, colour correction, audio ducking, and export. Capability prompts demonstrated by the developers include:</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Add the B-roll clips to V2.
+Apply a cross dissolve between each clip.
+Colour correct them to match the A-roll.
+Export a 1080p ProRes file.
+  </div>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: Jumper MCP workflow screenshot</div>
+<div class="img-desc">Screenshot of Claude chat with Jumper MCP running — show Claude sending a prompt and footage being assembled in Premiere. Alternatively, a workflow diagram.</div>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Video — Case Study 4" data-keywords="AI Video Generation via Claude Video — Case Study 4 Video — Case Study 4 AI Video Generation via Claude Claude can now route video generation requests to specialist AI tools — Higgsfield, Luma, and Runway — directly from the conversation. You describe the shot; Claude fires the generation. Higgsfield MCP (most integrated) Higgsfield launched an official MCP connector giving Claude access to 30+ video and image generation models, up to 4K output and 15-second clips. Once connected, the workflow is entirely conversational: Copy Generate a cinematic" data-title="AI Video Generation via Claude" id="page-v-case4">
+<div class="page-eyebrow video">Video — Case Study 4</div>
+<h1 class="page-title">AI Video Generation via Claude</h1>
+<p class="page-intro">Claude can now route video generation requests to specialist AI tools — Higgsfield, Luma, and Runway — directly from the conversation. You describe the shot; Claude fires the generation.</p>
+<h2>Higgsfield MCP (most integrated)</h2>
+<p>Higgsfield launched an official MCP connector giving Claude access to 30+ video and image generation models, up to 4K output and 15-second clips. Once connected, the workflow is entirely conversational:</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Generate a cinematic 5-second wide shot of [SCENE DESCRIPTION].
+Aspect ratio: 16:9.
+Model: Seedance 2.0.
+  </div>
+<p>Claude selects the right model for your brief, configures parameters, fires the generation, and returns the finished clip in your chat. From there you iterate — adjust the angle, push variants, or queue a batch from the same brief. <strong>No API keys required on your side.</strong></p>
+<h2>Luma AI (official MCP + Claude connector)</h2>
+<p>Luma AI has an official MCP server and a Claude connector in the directory. Best for: cinematic-look video generation, 3D exploration, and concept visualisation. Connect via Settings → Connectors → Luma.</p>
+<h2>Runway (via fal.ai)</h2>
+<p>Runway's official API exists but has poor customer support (2.3/5 on Trustpilot). The more reliable path is through fal.ai — an API marketplace that hosts Runway models at lower cost. Accessible via n8n HTTP node. Not a Connector in Claude.ai — intermediate setup required.</p>
+<h2>Cost guide for AI video generation</h2>
+<table class="comparison-table">
+<thead><tr><th>Tool</th><th>Cost</th><th>Path</th></tr></thead>
+<tbody>
+<tr><td>Higgsfield</td><td>$9–$39/mo plans</td><td>Official MCP — easiest</td></tr>
+<tr><td>Luma AI</td><td>Pay per render</td><td>Official Connector</td></tr>
+<tr><td>Kling via fal.ai</td><td>~$0.07–0.14/sec</td><td>HTTP API via n8n</td></tr>
+<tr><td>Runway via fal.ai</td><td>Per second</td><td>HTTP API via n8n</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<div class="callout-label">⚠️ Don't Use</div>
+<p>OpenAI Sora is no longer available (April 2026). Midjourney has no public API. Do not build workflows that depend on either.</p>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Video — Case Study 5" data-keywords="Adobe Connectors + After Effects Video — Case Study 5 Video — Case Study 5 Adobe Connectors + After Effects The Adobe for creativity connector covers Premiere and After Effects — with important caveats. Plus: Hyperframes, a new tool built specifically for Claude Code video automation. Adobe for creativity — video capabilities The official Adobe connector (connected in Claude.ai) includes video tools. Confirmed capability: Horizontal-to-vertical reframe (for platform repurposing — rough pass, not precision edit) Studio Sound audio cleanup in Premier" data-title="Adobe Connectors + After Effects" id="page-v-case5">
+<div class="page-eyebrow video">Video — Case Study 5</div>
+<h1 class="page-title">Adobe Connectors + After Effects</h1>
+<p class="page-intro">The Adobe for creativity connector covers Premiere and After Effects — with important caveats. Plus: Hyperframes, a new tool built specifically for Claude Code video automation.</p>
+<h2>Adobe for creativity — video capabilities</h2>
+<p>The official Adobe connector (connected in Claude.ai) includes video tools. <strong>Confirmed capability:</strong></p>
+<ul>
+<li>Horizontal-to-vertical reframe (for platform repurposing — rough pass, not precision edit)</li>
+<li>Studio Sound audio cleanup in Premiere</li>
+<li>Stock licensing and import for b-roll</li>
+</ul>
+<p><strong>Caveat:</strong> independent testing found the connector operates at roughly Adobe Express level. Pro-grade Premiere timeline work (complex cuts, colour grading, audio mixing) is not accessible through this connector. Use it for quick platform reformats and audio cleanup — not for creative edits.</p>
+<h2>After Effects + Hyperframes</h2>
+<p>Hyperframes is a video automation platform built specifically to work with Claude Code. It exposes API endpoints that let Claude programmatically add animated text overlays, apply motion presets, burn in subtitles, trim clips, and produce motion graphics sequences — without you writing code.</p>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Using Hyperframes, add these elements to [VIDEO FILE]:
+1. Animated text overlay at [TIMECODE]: "[YOUR TEXT]" — fade in, hold 3 seconds, fade out
+2. Subtitle burn-in from the attached transcript file
+3. Lower-third with speaker name "[NAME]" appearing at [TIMECODE]
+4. Brand logo in top-right corner throughout
+Export as 1080p H.264.
+  </div>
+<h2>Topaz Labs — May 2026 update</h2>
+<p>Topaz Labs shipped their largest model update in years on May 7, 2026: <strong>Hyperion 2</strong> for SDR-to-HDR video upscaling, plus a Topaz Labs panel inside Premiere. If you're doing any upscaling or restoration work in Premiere, the native panel is now the fastest path. Claude's role here is in writing the workflow instructions and batch processing scripts — not in driving Topaz directly (no MCP confirmed yet).</p>
+
+</div>
+<div class="page" data-eyebrow="Video — Prompt Library" data-keywords="Video Prompt Library Video — Prompt Library Video — Prompt Library Video Prompt Library Interview transcript → script Copy Turn this interview transcript into a structured YouTube script.
+- Write a 30-second cold open hook (no introductions — start with the most interesting insight)
+- Structure the body as 3–5 chapters with clear transitions
+- Write a closing CTA (subscribe, comment, or follow-up question)
+- Flag any parts where B-roll would help (suggest what to show)
+
+[PASTE TRANSCRIPT] Voiceover brief for ElevenLabs Copy Prepare this s" data-title="Video Prompt Library" id="page-v-prompts">
+<div class="page-eyebrow video">Video — Prompt Library</div>
+<h1 class="page-title">Video Prompt Library</h1>
+<h3>Interview transcript → script</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Turn this interview transcript into a structured YouTube script.
+- Write a 30-second cold open hook (no introductions — start with the most interesting insight)
+- Structure the body as 3–5 chapters with clear transitions
+- Write a closing CTA (subscribe, comment, or follow-up question)
+- Flag any parts where B-roll would help (suggest what to show)
+
+[PASTE TRANSCRIPT]
+  </div>
+<h3>Voiceover brief for ElevenLabs</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Prepare this script for ElevenLabs voiceover generation.
+- Add [pause] markers where the voice should pause (0.5 seconds)
+- Add [emphasis] markers on the 2–3 most important phrases per section
+- Simplify any sentences over 20 words
+- Tone: [e.g. calm and authoritative, energetic, conversational]
+
+[PASTE SCRIPT]
+  </div>
+<h3>Platform repurposing matrix</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Create a repurposing matrix for this [LENGTH]-minute video.
+
+For each platform below, give me:
+- The best clip moment(s) with timestamps
+- Suggested opening line (hook for that platform's format)
+- Optimal length
+- Caption copy
+
+Platforms: LinkedIn, Instagram Reels, TikTok, YouTube Shorts, Twitter/X
+  </div>
+<h3>Edit decision list (EDL) generator</h3>
+<div class="prompt-block"><button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Read this transcript and generate an edit decision list for a [TARGET LENGTH] highlight reel.
+
+Prioritise: [e.g. moments of clear insight, humour, audience reaction, surprising statements]
+Remove: [e.g. filler words, off-topic tangents, setup that doesn't add to the story]
+
+Output: a numbered list with timestamps (IN point and OUT point), and a one-line note for each clip explaining why it was selected.
+  </div>
+
+</div>
+<div class="page" data-eyebrow="Video — Tools" data-keywords="Video Tool Stack Video — Tools Video — Tools Video Tool Stack Tool What it does Cost Readiness Descript MCP AI editing, filler removal, Studio Sound, captions, export Descript sub ✅ Production Jumper MCP Footage search + timeline assembly in Premiere/Resolve/FCP Jumper sub ⚠️ Experimental ElevenLabs MCP Voiceover generation from script Free tier ✅ Production Higgsfield MCP 30+ video/image models, up to 4K, 15s clips $9–$39/mo ✅ Production Luma AI Connector Cinematic video generation Pay per use ✅ Production Adobe for creativi" data-title="Video Tool Stack" id="page-v-tools">
+<div class="page-eyebrow video">Video — Tools</div>
+<h1 class="page-title">Video Tool Stack</h1>
+<table class="comparison-table">
+<thead><tr><th>Tool</th><th>What it does</th><th>Cost</th><th>Readiness</th></tr></thead>
+<tbody>
+<tr><td><strong>Descript MCP</strong></td><td>AI editing, filler removal, Studio Sound, captions, export</td><td class="tag tag-paid">Descript sub</td><td>✅ Production</td></tr>
+<tr><td><strong>Jumper MCP</strong></td><td>Footage search + timeline assembly in Premiere/Resolve/FCP</td><td class="tag tag-paid">Jumper sub</td><td>⚠️ Experimental</td></tr>
+<tr><td><strong>ElevenLabs MCP</strong></td><td>Voiceover generation from script</td><td class="tag tag-free">Free tier</td><td>✅ Production</td></tr>
+<tr><td><strong>Higgsfield MCP</strong></td><td>30+ video/image models, up to 4K, 15s clips</td><td class="tag tag-paid">$9–$39/mo</td><td>✅ Production</td></tr>
+<tr><td><strong>Luma AI Connector</strong></td><td>Cinematic video generation</td><td class="tag tag-paid">Pay per use</td><td>✅ Production</td></tr>
+<tr><td><strong>Adobe for creativity</strong></td><td>Reframe, Studio Sound, Stock licensing</td><td class="tag tag-paid">Requires CC sub</td><td>⚠️ Express-level</td></tr>
+<tr><td><strong>Hyperframes</strong></td><td>Motion graphics, text overlays, subtitle burn-in via Claude Code</td><td class="tag tag-paid">API pricing</td><td>⚠️ Experimental</td></tr>
+<tr><td><strong>Topaz (Premiere panel)</strong></td><td>SDR→HDR, upscaling, restoration — Hyperion 2 (May 2026)</td><td class="tag tag-paid">Topaz sub</td><td>✅ In Premiere</td></tr>
+<tr><td><strong>video-edit-mcp / FFmpeg</strong></td><td>Trim, merge, convert, overlay — no NLE required</td><td class="tag tag-free">Free</td><td>✅ Stable</td></tr>
+<tr><td><strong>n8n</strong></td><td>Batch publish, asset delivery, approval loops</td><td class="tag tag-free">Free (self-hosted)</td><td>✅ Production</td></tr>
+</tbody>
+</table>
+
+</div>
+<div class="page" data-eyebrow="Reference" data-keywords="n8n Automation Reference Reference n8n Automation n8n is the automation layer for this entire playbook. It replaces Zapier and Make for all workflow automation — self-hosted, free, and fully compatible with Claude's API. What n8n does for designers Scheduled batch jobs — run a prompt every day at a set time (brief generation, performance digest) Approval loops — Claude generates → Google Sheets review → Slack approval → publish Multi-tool pipelines — trigger → fetch from Drive → Claude generate → validate → save to Noti" data-title="n8n Automation" id="page-n8n">
+<div class="page-eyebrow">Reference</div>
+<h1 class="page-title">n8n Automation</h1>
+<p class="page-intro">n8n is the automation layer for this entire playbook. It replaces Zapier and Make for all workflow automation — self-hosted, free, and fully compatible with Claude's API.</p>
+<h2>What n8n does for designers</h2>
+<ul>
+<li><strong>Scheduled batch jobs</strong> — run a prompt every day at a set time (brief generation, performance digest)</li>
+<li><strong>Approval loops</strong> — Claude generates → Google Sheets review → Slack approval → publish</li>
+<li><strong>Multi-tool pipelines</strong> — trigger → fetch from Drive → Claude generate → validate → save to Notion → notify Slack</li>
+<li><strong>Video repurposing ops</strong> — new recording in Drive → Descript import → Claude edit → share link to Slack</li>
+</ul>
+<h2>Getting started</h2>
+<p>For most 2X designers, the fastest start is <strong>n8n Cloud</strong> (managed, ~€20/month) rather than self-hosted. Self-hosting requires a server and some setup — do that later when you know what you're automating.</p>
+<div class="callout">
+<div class="callout-label">The #1 Template to Start With</div>
+<p>Template #10057 on n8n.io: "Generate Google ad copy automatically with Claude." It covers the full loop: product feed → Claude generates copy → character-limit validation → compliance check → Google Sheets → Slack approval. Adapt it to any copy-generation workflow.</p>
+</div>
+<h2>The Claude nodes in n8n</h2>
+<ul>
+<li><strong>Anthropic node</strong> — send a message to Claude, get a response. Works with any model.</li>
+<li><strong>Anthropic Chat Model sub-node</strong> — plug Claude into n8n's AI Agent or Chain for multi-step reasoning</li>
+<li><strong>HTTP Request node</strong> — fallback for direct API calls with custom headers or advanced options</li>
+</ul>
+<div class="image-placeholder">
+<div class="icon">🖼</div>
+<div class="img-label">IMAGE NEEDED: n8n workflow screenshot</div>
+<div class="img-desc">Screenshot of a simple n8n workflow showing: Trigger → Anthropic node → IF (approval) → Google Sheets. Dark background preferred.</div>
+</div>
+
+</div>
+<div class="page" data-eyebrow="Reference" data-keywords="Token &amp; Cost Guide Reference Reference Token &amp; Cost Guide Only relevant if you're using Claude via the API (n8n, automation scripts). Claude.ai subscription users: your monthly fee covers everything — you don't pay per token. API pricing (mid-2026) Model Input (per M tokens) Output (per M tokens) Batch discount Haiku 4.5 $1 $5 50% off Sonnet 4.6 ⭐ $3 $15 50% off Opus 4.x $5 $25 50% off Quick cost estimates One creative brief → $0.02–0.05 on Sonnet Ad copy batch (100 variants) → $0.10–0.30 on Sonnet Design token system → $0." data-title="Token &amp; Cost Guide" id="page-token-guide">
+<div class="page-eyebrow">Reference</div>
+<h1 class="page-title">Token &amp; Cost Guide</h1>
+<p class="page-intro">Only relevant if you're using Claude via the API (n8n, automation scripts). Claude.ai subscription users: your monthly fee covers everything — you don't pay per token.</p>
+<h2>API pricing (mid-2026)</h2>
+<table class="comparison-table">
+<thead><tr><th>Model</th><th>Input (per M tokens)</th><th>Output (per M tokens)</th><th>Batch discount</th></tr></thead>
+<tbody>
+<tr><td>Haiku 4.5</td><td>$1</td><td>$5</td><td>50% off</td></tr>
+<tr><td><strong>Sonnet 4.6 ⭐</strong></td><td><strong>$3</strong></td><td><strong>$15</strong></td><td>50% off</td></tr>
+<tr><td>Opus 4.x</td><td>$5</td><td>$25</td><td>50% off</td></tr>
+</tbody>
+</table>
+<h2>Quick cost estimates</h2>
+<ul>
+<li>One creative brief → <strong>$0.02–0.05</strong> on Sonnet</li>
+<li>Ad copy batch (100 variants) → <strong>$0.10–0.30</strong> on Sonnet</li>
+<li>Design token system → <strong>$0.05–0.20</strong> on Sonnet</li>
+<li>One uploaded screenshot → <strong>$0.02</strong> on Sonnet / <strong>$0.07</strong> on Opus 4.7+</li>
+<li>Full 5-step agentic run → <strong>$0.03–0.08</strong> on Sonnet</li>
+</ul>
+<h2>Reduce costs</h2>
+<ol>
+<li><strong>Use Haiku for classification and routing tasks</strong> — anything that doesn't need creative judgement</li>
+<li><strong>Enable prompt caching</strong> — saves up to 90% on repeated system prompts</li>
+<li><strong>Use Batch API for large jobs</strong> — 50% discount, results in under 24 hours</li>
+<li><strong>Resize images before uploading</strong> — 1568px is enough for most analysis; bigger = more tokens</li>
+<li><strong>Stay on Sonnet</strong> — for image-heavy tasks, Opus 4.7/4.8 costs 3× more per image</li>
+</ol>
+
+</div>
+<div class="page" data-eyebrow="Reference" data-keywords="Glossary Reference Reference Glossary Plain-English definitions for every technical term in this guide. MCP (Model Context Protocol) A connector that lets Claude reach into another application and perform actions there. Like a remote control that lets Claude press buttons inside Figma, Descript, or Canva. Connector A pre-built, verified MCP inside Claude.ai that you connect with one click via a login screen. Figma, Canva, and Adobe for creativity are Connectors. Skill A packaged set of instructions you install int" data-title="Glossary" id="page-glossary">
+<div class="page-eyebrow">Reference</div>
+<h1 class="page-title">Glossary</h1>
+<p class="page-intro">Plain-English definitions for every technical term in this guide.</p>
+<h3>MCP (Model Context Protocol)</h3>
+<p>A connector that lets Claude reach into another application and perform actions there. Like a remote control that lets Claude press buttons inside Figma, Descript, or Canva.</p>
+<h3>Connector</h3>
+<p>A pre-built, verified MCP inside Claude.ai that you connect with one click via a login screen. Figma, Canva, and Adobe for creativity are Connectors.</p>
+<h3>Skill</h3>
+<p>A packaged set of instructions you install into Claude once, and it applies every session. Like a saved preference that makes Claude always follow your brand rules.</p>
+<h3>HITL (Human in the Loop)</h3>
+<p>Every workflow in this guide has a point where a human reviews before anything is published or shared. That's the HITL gate — you approve, then Claude continues.</p>
+<h3>Token</h3>
+<p>The unit Claude uses to measure text. Roughly 1 token = 0.75 words. Relevant for API (pay-per-use) billing. Not relevant for Claude.ai subscription users.</p>
+<h3>Design Token</h3>
+<p>A named design decision stored as a variable — e.g. color/brand/primary = #FF0F0F. The name is used in both Figma and code, so design and engineering stay in sync.</p>
+<h3>Semantic Token</h3>
+<p>A design token named by purpose (color/semantic/danger) rather than value (color/primitive/red/500). Semantic tokens reference primitive tokens — so changing a primitive updates all semantic tokens automatically.</p>
+<h3>Claude Code</h3>
+<p>A terminal-based version of Claude that can run code, install tools, and perform complex multi-step operations. Used for Figma MCP write operations, design system builds, and n8n workflow creation.</p>
+<h3>Claude Design</h3>
+<p>Anthropic's prompt-to-prototype tool (launched April 2026, in research preview). You describe a UI; it generates a working prototype. Best for rapid upstream exploration, not sustained production work.</p>
+<h3>n8n</h3>
+<p>An open-source automation platform — like Zapier or Make, but self-hostable and free. Connects Claude to your other tools and schedules automated workflows.</p>
+<h3>Agentic workflow</h3>
+<p>A Claude session where Claude takes multiple steps autonomously — deciding what to do next based on the results of the previous step — rather than waiting for a new prompt each time.</p>
+<h3>Code Connect (Figma)</h3>
+<p>A Figma feature that maps your Figma components to your actual code components. When enabled, Claude generates code using your real imports — not generic HTML.</p>
+<h3>Underlord</h3>
+<p>Descript's built-in AI editing assistant. When you use Claude + Descript MCP, Claude can instruct Underlord to remove fillers, apply Studio Sound, generate captions, and more.</p>
+
+</div>
+  </main>
+</div>
+<div class="footer-controls" aria-label="Page controls">
+  <div class="progress-text" id="progressText">Page 1 of 37: Cover</div>
+  <div class="control-buttons">
+    <button class="ghost-btn" id="prevBtn" type="button">Previous</button>
+    <button class="primary-btn" id="nextBtn" type="button">Next</button>
+  </div>
+</div>
+<script>
+
+const pages = ["cover", "intro", "setup", "antislop", "models", "mcp-explainer", "figma-mcp", "figma-console", "figma-compare", "c-intro", "c-case1", "c-case2", "c-case3", "c-case4", "c-figma", "c-prompts", "c-tools", "u-intro", "u-case1", "u-case2", "u-case3", "u-case4", "u-case5", "u-claude-design", "u-prompts", "u-tools", "v-intro", "v-case1", "v-case2", "v-case3", "v-case4", "v-case5", "v-prompts", "v-tools", "n8n", "token-guide", "glossary"];
+let currentPage = 'cover';
+
+function showPage(id) {
+  const pageIndex = pages.indexOf(id);
+  if (pageIndex === -1) return;
+  currentPage = id;
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.target === id);
+  });
+
+  const title = target ? (target.dataset.title || id) : id;
+  document.getElementById('progressText').textContent = `Page ${pageIndex + 1} of ${pages.length}: ${title}`;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  prevBtn.disabled = pageIndex === 0;
+  nextBtn.disabled = pageIndex === pages.length - 1;
+  prevBtn.style.opacity = prevBtn.disabled ? 0.45 : 1;
+  nextBtn.style.opacity = nextBtn.disabled ? 0.45 : 1;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  closeSidebar();
+  const results = document.getElementById('search-results');
+  if (results) results.style.display = 'none';
+}
+
+function goPrev() {
+  const index = pages.indexOf(currentPage);
+  showPage(pages[Math.max(0, index - 1)]);
+}
+function goNext() {
+  const index = pages.indexOf(currentPage);
+  showPage(pages[Math.min(pages.length - 1, index + 1)]);
+}
+
+const searchIndex = Array.from(document.querySelectorAll('.page')).map(page => {
+  const id = page.id.replace('page-', '');
+  const title = page.dataset.title || '';
+  const eyebrow = page.dataset.eyebrow || '';
+  const body = page.textContent || '';
+  return { id, title, eyebrow, body };
+});
+
+function searchGuide(query) {
+  const results = document.getElementById('search-results');
+  if (!results) return;
+  results.innerHTML = '';
+  const q = query.trim().toLowerCase();
+  if (q.length < 2) { results.style.display = 'none'; return; }
+
+  const matches = searchIndex.filter(item => item.body.toLowerCase().includes(q) || item.title.toLowerCase().includes(q)).slice(0, 9);
+  if (!matches.length) {
+    results.innerHTML = '<button class="search-result-item" type="button"><strong>No results found</strong><br><span class="result-section">Try a simpler word like prompt, Figma, video, or HTML.</span></button>';
+    results.style.display = 'block';
+    return;
+  }
+  matches.forEach(match => {
+    const button = document.createElement('button');
+    button.className = 'search-result-item';
+    button.type = 'button';
+    button.innerHTML = `<div class="result-section">${match.eyebrow || 'Guide page'}</div><div>${match.title}</div>`;
+    button.addEventListener('click', () => {
+      showPage(match.id);
+      document.getElementById('search-input').value = '';
+      results.style.display = 'none';
+    });
+    results.appendChild(button);
+  });
+  results.style.display = 'block';
+}
+
+function copyPrompt(btn) {
+  const block = btn.closest('.prompt-block');
+  if (!block) return;
+  const clone = block.cloneNode(true);
+  const copyButton = clone.querySelector('.copy-btn');
+  if (copyButton) copyButton.remove();
+  const text = clone.innerText.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(() => btn.textContent = old || 'Copy', 1200);
+  }).catch(() => {
+    btn.textContent = 'Select text';
+  });
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('visible');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('visible');
+}
+
+document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => showPage(item.dataset.target)));
+document.getElementById('prevBtn').addEventListener('click', goPrev);
+document.getElementById('nextBtn').addEventListener('click', goNext);
+document.getElementById('search-input').addEventListener('input', event => searchGuide(event.target.value));
+document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+document.getElementById('overlay').addEventListener('click', closeSidebar);
+document.addEventListener('click', event => {
+  if (!event.target.closest('.search-wrap')) {
+    const results = document.getElementById('search-results');
+    if (results) results.style.display = 'none';
+  }
+});
+document.addEventListener('keydown', event => {
+  if (event.target.matches('input, textarea')) return;
+  if (event.key === 'ArrowRight') goNext();
+  if (event.key === 'ArrowLeft') goPrev();
+});
+showPage('cover');
+
+</script>
+</body>
+</html>
