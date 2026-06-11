@@ -774,15 +774,16 @@ tr:last-child td { border-bottom: 0; }
 <button class="nav-item pillar-video" data-target="v-case2" type="button"><span class="num">29</span><span>Descript + Claude</span></button>
 <button class="nav-item pillar-video" data-target="v-case3" type="button"><span class="num">30</span><span>Agentic Editing</span></button>
 <button class="nav-item pillar-video" data-target="v-case4" type="button"><span class="num">31</span><span>AI Video Generation</span></button>
-<button class="nav-item pillar-video" data-target="v-case5" type="button"><span class="num">32</span><span>Adobe + AE Workflows</span></button>
-<button class="nav-item pillar-video" data-target="v-prompts" type="button"><span class="num">33</span><span>Video Prompts</span></button>
-<button class="nav-item pillar-video" data-target="v-tools" type="button"><span class="num">34</span><span>Video Tools</span></button>
+<button class="nav-item pillar-video" data-target="v-higgsfield" type="button"><span class="num">32</span><span>Higgsfield MCP</span></button>
+<button class="nav-item pillar-video" data-target="v-case5" type="button"><span class="num">33</span><span>Adobe + AE Workflows</span></button>
+<button class="nav-item pillar-video" data-target="v-prompts" type="button"><span class="num">34</span><span>Video Prompts</span></button>
+<button class="nav-item pillar-video" data-target="v-tools" type="button"><span class="num">35</span><span>Video Tools</span></button>
 </div>
 <div class="nav-title">Reference</div>
 <div class="nav-list">
-<button class="nav-item" data-target="n8n" type="button"><span class="num">35</span><span>n8n Automation</span></button>
-<button class="nav-item" data-target="token-guide" type="button"><span class="num">36</span><span>Token and Cost Guide</span></button>
-<button class="nav-item" data-target="glossary" type="button"><span class="num">37</span><span>Glossary</span></button>
+<button class="nav-item" data-target="n8n" type="button"><span class="num">36</span><span>n8n Automation</span></button>
+<button class="nav-item" data-target="token-guide" type="button"><span class="num">37</span><span>Token and Cost Guide</span></button>
+<button class="nav-item" data-target="glossary" type="button"><span class="num">38</span><span>Glossary</span></button>
 </div>
     </nav>
     <div class="status-card">
@@ -1913,6 +1914,62 @@ Model: Seedance 2.0.
 </div>
 
 </div>
+<div class="page" data-eyebrow="Video — Case Study" data-keywords="Higgsfield MCP Video — Case Study Video — Case Study Higgsfield MCP — AI Generation Studio One connector gives Claude access to 30+ video and image generation models — Sora 2, Veo 3.1, Kling 3.0, Seedance 2.0, and more. Describe the shot; Claude picks the model, sets the parameters, and returns the finished asset in chat. Higgsfield official MCP launched April 30, 2026 No API keys required. Settings → Connectors → Add custom connector. Murmur headphone brand built in 5 minutes from one prompt." data-title="Higgsfield MCP — AI Generation Studio" id="page-v-higgsfield">
+<div class="page-eyebrow video">Video — Case Study</div>
+<h1 class="page-title">Higgsfield MCP — AI Generation Studio</h1>
+<p class="page-intro">Higgsfield turns Claude into a video and image production studio. One connector gives Claude access to 30+ generation models — Sora 2, Veo 3.1, Kling 3.0, Seedance 2.0, and more — so you describe the shot and Claude picks the model, sets the parameters, and returns the finished asset in chat.</p>
+<div class="case-study">
+<div class="case-header">
+<span class="case-badge badge-video">Video</span>
+<span class="case-badge badge-verified">✓ Verified</span>
+<span class="case-title">Official Higgsfield MCP — launched April 30, 2026</span>
+</div>
+<div class="case-body">
+<p>Higgsfield shipped a hosted MCP server at <code>mcp.higgsfield.ai/mcp</code>, giving Claude (web, desktop, mobile, and Claude Code) direct access to its full model library — 15+ image models and 16+ video models — through one authenticated connection. No API keys required; everything runs on your existing Higgsfield account and credit pool. The connector also works with Cowork and a few other agent platforms, so a team running mixed tools shares one library and one credit balance.</p>
+</div>
+</div>
+<h2>How to connect</h2>
+<ol class="step-list">
+<li><span class="step-num teal">1</span><div>Go to Settings → Connectors → Add custom connector.</div></li>
+<li><span class="step-num teal">2</span><div>Name it "Higgsfield" and paste the URL: <code>https://mcp.higgsfield.ai/mcp</code></div></li>
+<li><span class="step-num teal">3</span><div>Click Connect and sign in with your Higgsfield account.</div></li>
+<li><span class="step-num teal">4</span><div>For Claude Code: run <code>claude mcp add --transport http --scope user higgsfield https://mcp.higgsfield.ai/mcp</code> — auth happens via browser OAuth.</div></li>
+</ol>
+<p>The connector exposes five tools: <code>generate_image</code>, <code>generate_video</code>, <code>create_character</code>, <code>get_generation_status</code>, <code>list_characters</code>.</p>
+<h2>Featured case study — "Murmur" headphone brand</h2>
+<p>A single Claude Code prompt — <em>"Build me a headphone brand from scratch. I want you to do research, build the branding, build the product catalog, and for each of them, I want you to generate assets — a product photo, an Instagram ad, and a UGC video"</em> — produced market research, a brand name, three product lines, and rendered product photos, Instagram ads, and UGC-style videos for each, in roughly 5 minutes.</p>
+<p>The output wasn't flawless — some duplicate text overlays, one video felt too quiet — but the point isn't perfection on the first pass. It's that iteration now happens in seconds, not days.</p>
+<h2>Try it yourself</h2>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Generate a cinematic 5-second wide shot of [PRODUCT/SCENE DESCRIPTION].
+Style: [e.g. neon-lit, minimal studio, lifestyle]
+Aspect ratio: [9:16 / 16:9 / 1:1]
+  </div>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Train a Soul Character from these photos: [UPLOAD REFERENCE IMAGES]
+Then generate a 6-shot product reel for [PLATFORM]
+using the [UGC/Editorial/Product Hero] preset.
+Keep the character consistent across all shots.
+  </div>
+<div class="prompt-block">
+<button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+Generate [N] UGC-style ad variants for [PRODUCT],
+targeting [AUDIENCE].
+Use the UGC preset across [N] formats: [e.g. Instagram Reel, TikTok, Pinterest].
+Run the same brief through [Kling 2.5 Turbo / Veo 3.1] and show me both.
+  </div>
+<div class="callout teal">
+<div class="callout-label">Pricing — verify before use</div>
+<p>Free tier: 150 credits/month (~15 stills or 2 video clips on premium models). Beyond that, prepaid credits run roughly $1 per 16 credits; 720p video costs ~1–1.5 credits/second, with 4K and premium models costing significantly more. Claude Code adds no extra charge on top — all cost sits on the Higgsfield side. Note: annual billing is the default at signup, and MCP-generated images consume credits even if "Unlimited" is toggled on in the web UI — the unlimited tier doesn't cover MCP calls. Confirm current rates at higgsfield.ai before committing budget.</p>
+</div>
+<div class="callout">
+<div class="callout-label">Advantages</div>
+<p>One connector replaces juggling separate accounts for Sora, Veo, Kling, and others. Claude auto-selects the right model per brief — "model" becomes a parameter, not a separate subscription to manage. Soul Characters and brand kits hold consistency across a campaign and across sessions, so Claude can pick up a project weeks later with the same "cast."</p>
+</div>
+
+</div>
 <div class="page" data-eyebrow="Video — Case Study 5" data-keywords="Adobe Connectors + After Effects Video — Case Study 5 Video — Case Study 5 Adobe Connectors + After Effects The Adobe for creativity connector covers Premiere and After Effects — with important caveats. Plus: Hyperframes, a new tool built specifically for Claude Code video automation. Adobe for creativity — video capabilities The official Adobe connector (connected in Claude.ai) includes video tools. Confirmed capability: Horizontal-to-vertical reframe (for platform repurposing — rough pass, not precision edit) Studio Sound audio cleanup in Premier" data-title="Adobe Connectors + After Effects" id="page-v-case5">
 <div class="page-eyebrow video">Video — Case Study 5</div>
 <h1 class="page-title">Adobe Connectors + After Effects</h1>
@@ -2116,7 +2173,7 @@ Output: a numbered list with timestamps (IN point and OUT point), and a one-line
 </div>
 <script>
 
-const pages = ["cover", "intro", "setup", "antislop", "models", "mcp-explainer", "figma-mcp", "figma-console", "figma-compare", "c-intro", "c-case1", "c-case2", "c-case3", "c-case4", "c-figma", "c-prompts", "c-tools", "u-intro", "u-case1", "u-case2", "u-case3", "u-case4", "u-case5", "u-claude-design", "u-prompts", "u-tools", "v-intro", "v-case1", "v-case2", "v-case3", "v-case4", "v-case5", "v-prompts", "v-tools", "n8n", "token-guide", "glossary"];
+const pages = ["cover", "intro", "setup", "antislop", "models", "mcp-explainer", "figma-mcp", "figma-console", "figma-compare", "c-intro", "c-case1", "c-case2", "c-case3", "c-case4", "c-figma", "c-prompts", "c-tools", "u-intro", "u-case1", "u-case2", "u-case3", "u-case4", "u-case5", "u-claude-design", "u-prompts", "u-tools", "v-intro", "v-case1", "v-case2", "v-case3", "v-case4", "v-higgsfield", "v-case5", "v-prompts", "v-tools", "n8n", "token-guide", "glossary"];
 let currentPage = 'cover';
 
 function showPage(id) {
