@@ -917,18 +917,23 @@ Motion: One deliberate animation moment per page load. Nothing decorative.
 <div class="page" data-eyebrow="Getting Started" data-keywords="Which Model to Use Getting Started Getting Started Which Model to Use Claude has three model tiers: Haiku (fast and cheap), Sonnet (balanced), and Opus (powerful but expensive). Picking the right one saves money and time. Model Best for Avoid for Cost signal Haiku 4.5 Tagging, classification, metadata, quick text cleanup, routing decisions Anything creative or complex Cheapest — about $1 per million words in Sonnet 4.6 ⭐ Everything in this guide — briefs, copy, tokens, code, critiques, handoffs Nothing design-related needs more t" data-title="Which Model to Use" id="page-models">
 <div class="page-eyebrow">Getting Started</div>
 <h1 class="page-title">Which Model to Use</h1>
-<p class="page-intro">Claude has three model tiers: Haiku (fast and cheap), Sonnet (balanced), and Opus (powerful but expensive). Picking the right one saves money and time.</p>
+<p class="page-intro">Claude has four production model tiers, plus a new frontier tier: Haiku (fast and cheap), Sonnet (balanced), Opus (powerful), and Fable 5 (sustained reasoning). Picking the right one saves money and time.</p>
 <table class="comparison-table">
 <thead><tr><th>Model</th><th>Best for</th><th>Avoid for</th><th>Cost signal</th></tr></thead>
 <tbody>
 <tr><td><strong>Haiku 4.5</strong></td><td>Tagging, classification, metadata, quick text cleanup, routing decisions</td><td>Anything creative or complex</td><td>Cheapest — about $1 per million words in</td></tr>
 <tr><td><strong>Sonnet 4.6</strong> ⭐</td><td>Everything in this guide — briefs, copy, tokens, code, critiques, handoffs</td><td>Nothing design-related needs more than this</td><td>Mid — about $3 per million words in</td></tr>
-<tr><td><strong>Opus 4.x</strong></td><td>Very complex systems design, multi-document synthesis, long-horizon reasoning</td><td>Image-heavy tasks — it charges 3× more per screenshot</td><td>Higher — about $5 per million words in</td></tr>
+<tr><td><strong>Opus 4.8</strong></td><td>Very complex systems design, multi-document synthesis, long-horizon reasoning</td><td>Image-heavy tasks — it charges 3× more per screenshot</td><td>Higher — about $5 per million words in</td></tr>
+<tr><td><strong>Fable 5</strong> ✨</td><td>Extended design briefs (2+ hours), sustained creative reasoning, complex visual analysis, long-context synthesis</td><td>Interactive iteration, cost-sensitive tasks under $20</td><td>Premium — about $10 per million words in</td></tr>
 </tbody>
 </table>
 <div class="callout">
-<div class="callout-label">⚠️ Important for Designers</div>
-<p>If your task involves uploading screenshots or mockup images, <strong>do not use Opus 4.7 or 4.8</strong>. These models charge approximately 3× more per image token than previous versions. For visual tasks, Sonnet 4.6 gives you 95% of the capability at a fraction of the cost. A typical 1000×1000px screenshot costs about $0.02 on Sonnet and $0.07 on Opus 4.7+.</p>
+<div class="callout-label">✨ Fable 5 for Designers (Launched June 9, 2026)</div>
+<p>Fable 5 is designed for sustained creative reasoning over extended sessions. Best for: design briefs that take 2+ hours to work through, multi-round visual analysis, and synthesis across dozens of design references. Available on Pro, Max, and Team plans. Budget guidance: a typical extended design sprint costs $0.50–$2.00 per session.</p>
+</div>
+<div class="callout">
+<div class="callout-label">⚠️ Image Costs (All Models)</div>
+<p>Fable 5 shares Opus's 3× image pricing — avoid it for image-heavy tasks. For visual work with many screenshots or mockups, Sonnet 4.6 is the sweet spot: 95% of capability at a fraction of the cost. A typical 1000×1000px screenshot costs about $0.02 on Sonnet and $0.07 on Opus/Fable 5.</p>
 </div>
 <p><strong>In Claude.ai (the subscription interface),</strong> models map to daily usage limits rather than per-use cost. If you're on the Pro plan, Claude may suggest switching to a lighter model during heavy use periods — that's normal. Switch back when your limit resets.</p>
 
@@ -2084,7 +2089,8 @@ Output: a numbered list with timestamps (IN point and OUT point), and a one-line
 <tbody>
 <tr><td>Haiku 4.5</td><td>$1</td><td>$5</td><td>50% off</td></tr>
 <tr><td><strong>Sonnet 4.6 ⭐</strong></td><td><strong>$3</strong></td><td><strong>$15</strong></td><td>50% off</td></tr>
-<tr><td>Opus 4.x</td><td>$5</td><td>$25</td><td>50% off</td></tr>
+<tr><td>Opus 4.8</td><td>$5</td><td>$25</td><td>50% off</td></tr>
+<tr><td><strong>Fable 5 ✨</strong></td><td><strong>$10</strong></td><td><strong>$50</strong></td><td>50% off</td></tr>
 </tbody>
 </table>
 <h2>Quick cost estimates</h2>
@@ -2092,8 +2098,9 @@ Output: a numbered list with timestamps (IN point and OUT point), and a one-line
 <li>One creative brief → <strong>$0.02–0.05</strong> on Sonnet</li>
 <li>Ad copy batch (100 variants) → <strong>$0.10–0.30</strong> on Sonnet</li>
 <li>Design token system → <strong>$0.05–0.20</strong> on Sonnet</li>
-<li>One uploaded screenshot → <strong>$0.02</strong> on Sonnet / <strong>$0.07</strong> on Opus 4.7+</li>
+<li>One uploaded screenshot → <strong>$0.02</strong> on Sonnet / <strong>$0.07</strong> on Opus 4.8/Fable 5</li>
 <li>Full 5-step agentic run → <strong>$0.03–0.08</strong> on Sonnet</li>
+<li>Extended design sprint (1–2 hours, multi-concept generation) → <strong>$0.50–$2.00</strong> on Fable 5</li>
 </ul>
 <h2>Reduce costs</h2>
 <ol>
@@ -2101,7 +2108,8 @@ Output: a numbered list with timestamps (IN point and OUT point), and a one-line
 <li><strong>Enable prompt caching</strong> — saves up to 90% on repeated system prompts</li>
 <li><strong>Use Batch API for large jobs</strong> — 50% discount, results in under 24 hours</li>
 <li><strong>Resize images before uploading</strong> — 1568px is enough for most analysis; bigger = more tokens</li>
-<li><strong>Stay on Sonnet</strong> — for image-heavy tasks, Opus 4.7/4.8 costs 3× more per image</li>
+<li><strong>Use Sonnet as default</strong> — only switch to Fable 5 for tasks requiring 30+ minutes of sustained reasoning</li>
+<li><strong>For extended design sessions, Fable 5 may cost less overall</strong> — a 2-hour Fable session ($1–2) is often cheaper than 4–5 iterative rounds on Sonnet</li>
 </ol>
 
 </div>
