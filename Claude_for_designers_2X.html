@@ -373,35 +373,11 @@ code {
   min-height: 460px;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.04) url('Images/Orbit.png') center/cover no-repeat;
   box-shadow: var(--shadow);
   overflow: hidden;
   padding: 30px;
 }
-.cover-card::before {
-  content: "";
-  position: absolute;
-  inset: 24px;
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.13);
-}
-.orbital {
-  position: absolute;
-  width: 360px;
-  height: 360px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 50%;
-  right: -70px;
-  top: 36px;
-}
-.orbital::before, .orbital::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.12);
-  inset: 54px;
-}
-.orbital::after { inset: 116px; border-color: rgba(255,15,15,0.62); }
 .floating-chip {
   position: absolute;
   border: 1px solid rgba(255,255,255,0.15);
@@ -813,7 +789,6 @@ tr:last-child td { border-bottom: 0; }
       </div>
     </div>
     <div class="cover-card" aria-label="Decorative Claude workflow visual">
-      <div class="orbital"></div>
       <div class="floating-chip chip-a"><b>Prompt smarter</b><span>Context, task, constraints</span></div>
       <div class="floating-chip chip-b"><b>Review safely</b><span>Human judgment stays first</span></div>
       <div class="floating-chip chip-c"><b>Build faster</b><span>Drafts, checks, prototypes</span></div>
